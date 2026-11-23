@@ -22,6 +22,7 @@ export async function ensureDatabase(db, { withDemoData = false } = {}) {
     // Bases creadas con versiones anteriores: las migraciones son idempotentes.
     for (const file of SQL_FILES.migrations) await runFile(db, file);
   }
+  await runFile(db, SQL_FILES.maps);
   await runFile(db, SQL_FILES.seed);
   if (created && withDemoData) await runFile(db, SQL_FILES.demo);
   return created;
@@ -31,6 +32,7 @@ export async function ensureDatabase(db, { withDemoData = false } = {}) {
 export async function resetDatabase(db, { withDemoData = false } = {}) {
   await db.query('DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public;');
   await runFile(db, SQL_FILES.schema);
+  await runFile(db, SQL_FILES.maps);
   await runFile(db, SQL_FILES.seed);
   if (withDemoData) await runFile(db, SQL_FILES.demo);
 }

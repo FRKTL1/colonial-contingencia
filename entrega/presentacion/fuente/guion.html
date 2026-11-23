@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Guion de la exposición — Colonial Pipeline 2021</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 16mm; }
+  :root { --navy:#1E3354; --amber:#F4C150; --muted:#5E6B82; --border:#DDE3EC; --ok:#2F8A57; --bad:#C93C3C; --warn:#B7791F; }
+  * { box-sizing: border-box; }
+  body { font-family: Inter, system-ui, sans-serif; color:#1B2433; font-size: 10.5pt; line-height: 1.5; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  h1 { font-size: 22pt; color: var(--navy); margin: 0 0 4pt; letter-spacing: -.01em; }
+  h2 { font-size: 14pt; color: var(--navy); margin: 22pt 0 8pt; padding-bottom: 4pt; border-bottom: 2px solid var(--amber); break-after: avoid; }
+  h3 { font-size: 11pt; color: var(--navy); margin: 0; }
+  p { margin: 4pt 0; }
+  .sub { color: var(--muted); font-size: 11pt; margin-bottom: 14pt; }
+  .box { border: 1px solid var(--border); border-radius: 8px; padding: 10pt 12pt; margin: 8pt 0; break-inside: avoid; }
+  .tip { background: #FDF4DC; border-color: #F1DCA6; }
+  .slide { display: grid; grid-template-columns: 58pt 1fr; gap: 10pt; padding: 8pt 0; border-bottom: 1px solid var(--border); break-inside: avoid; }
+  .slide .n { font-weight: 800; color: #fff; background: var(--navy); border-radius: 6px; text-align: center; padding: 3pt 0; height: fit-content; font-size: 10pt; }
+  .slide .t { font-size: 8.5pt; color: var(--muted); text-align: center; margin-top: 3pt; }
+  .say { margin-top: 3pt; }
+  .say em { color: var(--navy); font-style: normal; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0; font-size: 10pt; }
+  th, td { text-align: left; padding: 5pt 7pt; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--navy); color: #fff; font-weight: 700; }
+  code { font-family: ui-monospace, Menlo, monospace; background: #EEF1F6; padding: 1pt 4pt; border-radius: 3px; font-size: 9.5pt; }
+  pre { font-family: ui-monospace, Menlo, monospace; background: #0F1726; color: #D5DEEE; padding: 9pt 11pt; border-radius: 7px; font-size: 9.5pt; line-height: 1.55; margin: 6pt 0; white-space: pre-wrap; }
+  ol.demo { padding-left: 18pt; margin: 4pt 0; }
+  ol.demo li { margin: 5pt 0; }
+  .k { display: inline-block; font-weight: 700; padding: 0 5pt; border-radius: 4px; background: #E8EEF8; color: var(--navy); font-size: 9.5pt; }
+  .qa { break-inside: avoid; margin: 9pt 0; }
+  .qa b { color: var(--navy); }
+  .pill { display:inline-block; font-size:8.5pt; font-weight:700; padding:1pt 6pt; border-radius:10px; }
+  .ok { background:#E7F4EC; color:var(--ok) } .bad { background:#FDECEC; color:var(--bad) } .warn { background:#FDF4DC; color:var(--warn) }
+</style>
+</head>
+<body>
+<h1>Guion de la exposición</h1>
+<p class="sub">Colonial Pipeline 2021 · Del caso real al sistema tecnológico · 37 diapositivas + demo en vivo</p>
+
+<div class="box tip">
+  <h3>Plan de tiempo (≈ 20 minutos)</h3>
+  <table>
+    <tr><th>Bloque</th><th>Diapositivas</th><th>Tiempo</th><th>Quién (sugerido)</th></tr>
+    <tr><td>Apertura y caso real</td><td>1–6</td><td>3.5 min</td><td>Integrante 1</td></tr>
+    <tr><td>Problema y plan de contingencia</td><td>7–11</td><td>3.5 min</td><td>Integrante 2</td></tr>
+    <tr><td>El sistema</td><td>12–16</td><td>3.5 min</td><td>Integrante 3</td></tr>
+    <tr><td>Prototipo y pruebas</td><td>17–24</td><td>3 min</td><td>Integrante 4</td></tr>
+    <tr><td>Panel, mapa de calor y mejoras</td><td>25–34</td><td>3 min</td><td>Integrante 3</td></tr>
+    <tr><td>Conclusiones y cierre</td><td>35–37</td><td>1 min</td><td>Integrante 1</td></tr>
+    <tr><td>Demo en vivo</td><td>—</td><td>2.5 min</td><td>Integrante 3 o 4</td></tr>
+  </table>
+  <p>Si les dan menos tiempo, salten las divisorias (3, 7, 9, 12, 17, 25), la 36 (fuentes) y resuman 32 y 33 en una frase cada una.</p>
+</div>
+
+<h2>1 · Notas por diapositiva</h2>
+
+<div class="slide"><div><div class="n">1</div><div class="t">15 s</div></div><div><h3>Portada</h3>
+<p class="say">“Buenos días. Presentamos el caso <em>Colonial Pipeline 2021</em>: analizamos el incidente real, diseñamos su plan de contingencia y construimos un sistema funcional, publicado en la nube, para gestionar la respuesta.”</p></div></div>
+
+<div class="slide"><div><div class="n">2</div><div class="t">15 s</div></div><div><h3>Agenda</h3>
+<p class="say">Lean solo los seis títulos. No expliquen cada caja.</p></div></div>
+
+<div class="slide"><div><div class="n">4</div><div class="t">45 s</div></div><div><h3>Cifras</h3>
+<p class="say">“Colonial opera más de 8,800 km de oleoducto, de Texas a Nueva Jersey, y lleva casi la mitad del combustible de la costa este. En mayo de 2021 estuvo <em>5 días detenido</em>. Pagaron <em>4.4 millones</em> de rescate. Y lo más importante: <em>bastó una sola contraseña</em>.”</p></div></div>
+
+<div class="slide"><div><div class="n">5</div><div class="t">50 s</div></div><div><h3>Cronología</h3>
+<p class="say">6 de mayo, intrusión y robo de 100 GB; 7 de mayo, ransomware y detención de <em>todo</em> el oleoducto; 12, inicio del reinicio por tramos; 13, reinicio completo. Cierren con la cita: <em>“no tenían un plan específico para ransomware”</em>. Esa frase justifica todo el proyecto.</p></div></div>
+
+<div class="slide"><div><div class="n">6</div><div class="t">50 s</div></div><div><h3>Causa raíz</h3>
+<p class="say">Lean la cadena de 5 pasos. Clave: <em>la red OT, la que mueve el combustible, no fue cifrada</em>; se detuvo por precaución y porque sin facturación no podían cobrar.</p></div></div>
+
+<div class="slide"><div><div class="n">8</div><div class="t">50 s</div></div><div><h3>Ficha del incidente</h3>
+<p class="say">Es el paso 2 de la actividad. Dediquen más tiempo a la fila <em>Necesidades</em>: cada una se convirtió en un módulo del sistema.</p></div></div>
+
+<div class="slide"><div><div class="n">10</div><div class="t">1.5 min</div></div><div><h3>Diagrama de flujo</h3>
+<p class="say">Recorran la fila superior y luego la inferior. Destaquen las <em>4 decisiones</em> (se pedían al menos 3), el bucle rojo <em>Reintentar</em> y la <em>Ruta alternativa</em> por camiones.</p></div></div>
+
+<div class="slide"><div><div class="n">11</div><div class="t">50 s</div></div><div><h3>Decisiones → sistema</h3>
+<p class="say">“El diagrama no se quedó en papel. Si D1 es Sí, el sistema marca los 4 servicios OT como afectados, <em>detiene y aísla todos los tramos y SCADA</em>, como hizo Colonial el 7 de mayo, y asigna la tarea al operador OT. No se puede saltar ningún paso.”</p></div></div>
+
+<div class="slide"><div><div class="n">13</div><div class="t">50 s</div></div><div><h3>Usuarios y módulos</h3>
+<p class="say">Cinco roles, como en una respuesta real, y siete módulos. Mencionen que el primero es el <em>acceso con MFA</em>: exactamente lo que le faltó a la VPN de Colonial.</p></div></div>
+
+<div class="slide"><div><div class="n">14</div><div class="t">45 s</div></div><div><h3>Reglas de negocio</h3>
+<p class="say">Destaquen la <em>4</em> (no se valida el reinicio si falló la erradicación) y la <em>7</em> (tramos y sistemas se aíslan solos y no se reinician sin verificación). Las reglas viven en el servidor.</p></div></div>
+
+<div class="slide"><div><div class="n">15</div><div class="t">45 s</div></div><div><h3>Modelo de datos</h3>
+<p class="say">“Están las cinco tablas que pide la actividad. En total son <em>18 tablas en PostgreSQL</em>, agrupadas por dominio. En naranja, lo que agregamos para el mapa: ubicaciones, tramos y sistemas (cada fila exige una fuente) y rondas. El historial está encadenado con SHA-256.”</p></div></div>
+
+<div class="slide"><div><div class="n">16</div><div class="t">50 s</div></div><div><h3>Arquitectura y tecnologías</h3>
+<p class="say">Es la justificación de tecnologías. Frase clave: <em>“con transacciones, una decisión y todos sus efectos se guardan juntos o no se guarda nada”</em>. Cierren con: “está desplegado en Render y cada cambio corre 73 pruebas automáticas”.</p></div></div>
+
+<div class="slide"><div><div class="n">18</div><div class="t">30 s</div></div><div><h3>Acceso seguro</h3>
+<p class="say">“Lo primero que aprendimos del caso: una sola contraseña no basta. Nuestro sistema pide <em>contraseña y código MFA</em>, bloquea tras 5 intentos y registra cada acceso.”</p></div></div>
+
+<div class="slide"><div><div class="n">19–21</div><div class="t">1.5 min</div></div><div><h3>Prototipo</h3>
+<p class="say">Si harán la demo en vivo, pasen rápido. Si no: registro, decisión guiada y panel en crisis, con <em>7 servicios afectados y 30 % de disponibilidad</em>.</p></div></div>
+
+<div class="slide"><div><div class="n">22</div><div class="t">45 s</div></div><div><h3>Tres escenarios</h3>
+<p class="say">“Probamos los tres escenarios que pide la actividad dentro de <em>73 pruebas automáticas</em> sobre PostgreSQL, y un simulacro automático de 17 pasos. Todas pasan.” Señalen la terminal.</p></div></div>
+
+<div class="slide"><div><div class="n">23</div><div class="t">40 s</div></div><div><h3>Escenario fallido</h3>
+<p class="say">La más convincente: <em>el sistema no deja reiniciar a ciegas</em>. Si la erradicación falló y alguien dice “Sí”, se rechaza y obliga a ir a análisis forense.</p></div></div>
+
+<div class="slide"><div><div class="n">24</div><div class="t">25 s</div></div><div><h3>Escenario exitoso</h3>
+<p class="say">Todas las etapas en verde, servicios al 100 % y los equipos aislados reconectados <em>solo después</em> de pasar la ronda de verificación.</p></div></div>
+
+<div class="slide"><div><div class="n">26</div><div class="t">40 s</div></div><div><h3>Panel en Figma</h3>
+<p class="say">El reto adicional: tres momentos del caso y la versión móvil. Si lo piden, abran: <code>figma.com/design/MsFkBeMOaDbf6MVfLvwnOV</code></p></div></div>
+
+<div class="slide"><div><div class="n">27</div><div class="t">40 s</div></div><div><h3>Integración con Rack · Operación</h3>
+<p class="say">“Reutilizamos cuatro ideas de otro proyecto nuestro, un mapa de calor para racks de almacén, pero <em>sobre la red real de Colonial y solo con datos publicados</em>. La escala de calor es la misma; aquí mide cuánta capacidad deja de fluir: la Línea 1 mueve 1.5 millones de barriles al día, por eso es la más roja.”</p></div></div>
+
+<div class="slide"><div><div class="n">28</div><div class="t">45 s</div></div><div><h3>La red real</h3>
+<p class="say">“Son las 22 instalaciones del mapa oficial que Colonial publicó el 13 de mayo, en sus coordenadas reales, de Houston a Linden. Las capacidades y diámetros son de McKinsey. Tras D1 = Sí, <em>las 4 líneas quedan detenidas</em>.” Si preguntan por el trazado: es esquemático, el derecho de vía exacto no es público.</p></div></div>
+
+<div class="slide"><div><div class="n">29</div><div class="t">45 s</div></div><div><h3>El caso, día por día</h3>
+<p class="say">“Con un botón reproducimos lo que pasó: el 7 todo detenido; el 9 algunos laterales; el 10 la <em>Línea 4 en control manual</em>; el 12 reinicio por segmentos y el 13 entregas en todos los mercados. Cada día cita su fuente.”</p></div></div>
+
+<div class="slide"><div><div class="n">30</div><div class="t">40 s</div></div><div><h3>Rondas</h3>
+<p class="say">“Nada se reinicia sin verificar. Los puntos salen de lo que hizo Colonial: <em>recorrió 29,000 millas</em> inspeccionando y reportó lecturas en sitio; y de CISA y la TSA para los sistemas. El OK solo se habilita con todos los puntos confirmados.”</p></div></div>
+
+<div class="slide"><div><div class="n">31</div><div class="t">30 s</div></div><div><h3>Bitácora encadenada</h3>
+<p class="say">“Cada evento guarda la huella del anterior. Si alguien cambia un registro, incluso directo en la base, <em>la verificación dice en qué evento se rompió la cadena</em>.”</p></div></div>
+
+<div class="slide"><div><div class="n">32</div><div class="t">30 s</div></div><div><h3>Cada dato tiene fuente</h3>
+<p class="say">“No inventamos datos: 14 fuentes públicas, y la base de datos rechaza una instalación sin fuente. Lo que no se publica, como la capacidad de los ramales, aparece como <em>sin dato público</em>.” Si les preguntan de dónde sale algo, abran la pestaña Fuentes.</p></div></div>
+
+<div class="slide"><div><div class="n">33</div><div class="t">30 s</div></div><div><h3>Analítica</h3>
+<p class="say">MTTR y MTTC para el comité. La etapa más lenta es <em>Erradicación</em>.</p></div></div>
+
+<div class="slide"><div><div class="n">34</div><div class="t">50 s</div></div><div><h3>Mejoras</h3>
+<p class="say">Izquierda: lo que habría evitado el ataque. Derecha: la siguiente versión. MFA ya está hecho; lo siguiente es SSO corporativo, conectar el mapa al SCADA real e integrarlo con SIEM/EDR.</p></div></div>
+
+<div class="slide"><div><div class="n">35</div><div class="t">30 s</div></div><div><h3>Conclusiones</h3>
+<p class="say">Lean las tres y cierren con pausa: <em>“Un plan que solo existe en papel se improvisa bajo presión. Un sistema hace que se cumpla.”</em></p></div></div>
+
+<h2>2 · Demo en vivo (2–3 min)</h2>
+
+<div class="box">
+  <h3>Opción A · En la nube (recomendada)</h3>
+  <p>Abran la URL de su servicio en Render (la que aparece en el panel de Render, terminada en <code>.onrender.com</code>). El plan gratuito se “duerme”: <b>ábranla 2 minutos antes</b> para que despierte.</p>
+  <h3 style="margin-top:8pt">Opción B · En la laptop</h3>
+  <p>Requisitos: Node.js 22 y Docker (o PostgreSQL 16 instalado).</p>
+<pre>git clone https://github.com/Aldoyzx/colonial-contingencia
+cd colonial-contingencia &amp;&amp; docker compose up -d
+cd server &amp;&amp; npm install
+cd ../client &amp;&amp; npm install &amp;&amp; npm run build
+cd ../server &amp;&amp; npm run db:demo &amp;&amp; npm start     # http://localhost:4000</pre>
+  <p>Cuentas (contraseña <code>Colonial2021!</code>): <b>mtorres@colonial.local</b> (coordinadora), <b>jrios@</b> (TI), <b>lparedes@</b> (OT), <b>asalinas@</b> (legal). Zoom del navegador al 125 %.</p>
+</div>
+
+<ol class="demo">
+  <li><b>Login</b> con <b>mtorres@colonial.local</b>. Si activaron MFA en “Mi cuenta”, muestren el código del celular: “la lección del caso”.</li>
+  <li><span class="k">Registrar incidente</span>: “Ransomware DarkSide”, una descripción breve y los servicios <b>TI-FACT, TI-VPN y TI-AD</b> → <span class="k">Registrar incidente</span>.</li>
+  <li><span class="k">Mapa de calor</span>: abajo, en <b>Sistemas que el caso documenta</b>, el <b>Perfil VPN heredado</b> y la facturación ya quedaron <em>aislados solos</em>. Abran la VPN y muestren el hallazgo y su fuente (testimonio de Blount).</li>
+  <li>Vuelvan al incidente: <span class="k">Completar</span> la acción → <span class="k">Avanzar</span>; completen la evaluación, escriban “Sin segmentación TI/OT verificada” y pulsen <span class="k">Sí</span>.</li>
+  <li><span class="k">Mapa de calor</span>: “Las 4 líneas se detuvieron solas.” Clic en la Línea 1: 40 pulgadas, gasolina, 1.5 M barriles/día, con fuente. Luego pulsen <span class="k">10 may</span>: “la Línea 4 en control manual, como pasó”.</li>
+  <li><b>Escenario fallido</b> (si hay tiempo): Contención → <span class="k">No</span>; en Erradicación marquen la acción como <span class="k">Falló</span> y pulsen <span class="k">Sí</span>: aparece el error en rojo. “No deja reiniciar a ciegas.”</li>
+  <li><b>Rondas</b>: <span class="k">Verificar los N aislados</span> → <span class="k">Iniciar ronda</span>. En la VPN muestren que <span class="k">OK</span> está bloqueado hasta marcar los 4 puntos; márquenla <span class="k">Falla</span> con nota. Confirmen los 4 puntos de un tramo → <span class="k">OK</span>. En el mapa, ese tramo ya permite <span class="k">Reiniciar tramo</span>; la VPN no.</li>
+  <li><b>Bitácora</b> → <span class="k">Verificar integridad</span>: “Cadena íntegra, N eventos.”</li>
+</ol>
+
+<div class="box tip"><b>Plan B:</b> si la red o Render fallan, no pierdan tiempo: las diapositivas 18 a 24 y 28 a 32 son capturas reales de exactamente este recorrido. Digan “estas son capturas de la ejecución” y sigan.</div>
+
+<h2>3 · Preguntas probables y cómo responder</h2>
+
+<div class="qa"><b>¿Por qué PostgreSQL?</b><br>Transacciones reales, tipos ENUM, claves foráneas y CHECK, y sobre todo <b>triggers</b>: con ellos el historial es de solo inserción y se encadena con SHA-256 dentro de la base, sin depender de la aplicación. Además, Render lo ofrece gestionado.</div>
+
+<div class="qa"><b>¿Cómo garantizan que no se salten pasos?</b><br>El flujo está en el servidor como una máquina de estados (<code>domain/flow.js</code>). La API rechaza con error 409 cualquier acción fuera de orden, aunque alguien modifique la interfaz.</div>
+
+<div class="qa"><b>¿Qué tan seguro es el acceso?</b><br>Contraseñas con scrypt, MFA con TOTP (el estándar de Google y Microsoft Authenticator) con el secreto cifrado con AES-256-GCM, cookie httpOnly, bloqueo tras 5 intentos y límite por IP. Se puede exigir MFA por rol.</div>
+
+<div class="qa"><b>¿Cómo calculan el calor del mapa?</b><br>No es un puntaje inventado: es la <b>capacidad nominal publicada</b> del tramo que se detiene (McKinsey): Línea 1, 1.5 M barriles/día (nivel 5); Línea 2, 1.2 M (nivel 4); líneas 3 y 4, 885 y 700 mil (nivel 3). Los ramales no tienen capacidad pública y se muestran como “sin dato público”.</div>
+
+<div class="qa"><b>¿Por qué se aísla todo cuando D1 = Sí?</b><br>Porque es lo que hizo Colonial: según el testimonio de Blount, a las 6:10 del 7 de mayo las 5,500 millas estaban detenidas para que el malware no llegara a la red OT. La alerta de CISA/FBI también pide aislar lo afectado.</div>
+
+<div class="qa"><b>¿De dónde salen los puntos de las rondas?</b><br>Tramos: patrullaje y lecturas en sitio (Colonial recorrió 29,000 millas, según Blount, y aumentó los patrullajes aéreos, según AOPA), operación manual probada (CISA; la Línea 4 operó en manual, según Fox Business) y detección de fugas (API RP 1130). Sistemas: MFA, cuentas heredadas eliminadas, parches KEV y respaldos probados (CISA AA21-131A y directiva TSA Pipeline-2021-02).</div>
+
+<div class="qa"><b>¿El trazado del ducto es exacto?</b><br>No. Las ciudades están en sus coordenadas reales y son las del mapa oficial de Colonial; las líneas entre ellas son esquemáticas porque el derecho de vía exacto no es público. Oxford, que aparece en el mapa oficial sin estado, se omitió para no adivinar.</div>
+
+<div class="qa"><b>¿Y si alguien borra un evento directamente en la base?</b><br>El trigger impide modificar o borrar el historial. Si alguien lo desactiva y altera un registro, la cadena de huellas ya no coincide y la verificación indica el número del primer evento alterado. Está probado en las pruebas automáticas.</div>
+
+<div class="qa"><b>¿Por qué no hay servidores ni racks?</b><br>Porque el inventario real de Colonial no es público y no queríamos presentar datos inventados. Mostramos solo los sistemas que el caso documenta: el perfil VPN heredado, la facturación y el centro de control.</div>
+
+<div class="qa"><b>¿Por qué la empresa detuvo el oleoducto si la red OT no fue atacada?</b><br>Por precaución: no sabían si el malware podía saltar a OT, y sin facturación no podían cobrar lo entregado. Es la decisión D1.</div>
+
+<div class="qa"><b>¿Debieron pagar el rescate?</b><br>Es discutible. El FBI desaconseja pagar; la herramienta de descifrado era lenta y se recuperaron con sus propios respaldos. Por eso, en D2 el pago no se decide automáticamente: se deriva a legal y a las autoridades.</div>
+
+<div class="qa"><b>¿Qué pasa si la recuperación falla varias veces?</b><br>Cada fallo se cuenta; al llegar al límite de intentos, el sistema sube la severidad a crítica y lo registra en el historial (escenario 3).</div>
+
+<div class="qa"><b>¿Cómo probaron el sistema?</b><br>73 pruebas automáticas (<code>npm test</code>): los 3 escenarios, reglas de negocio, seguridad y MFA, evidencias, aislamiento, rondas, bitácora, la API y que <b>cada dato del mapa cite una fuente existente</b>. GitHub Actions las corre en cada cambio, junto con la auditoría de dependencias.</div>
+
+<div class="qa"><b>¿Qué relación tiene el diseño de Figma con la app?</b><br>Comparten los mismos colores y medidas. El panel de Figma son las mismas pantallas, diseñadas con componentes reutilizables.</div>
+
+<h2>4 · Datos para no equivocarse</h2>
+<table>
+  <tr><th>Dato</th><th>Valor</th></tr>
+  <tr><td>Fecha del ataque</td><td>7 de mayo de 2021 (intrusión: 6 de mayo)</td></tr>
+  <tr><td>Grupo atacante</td><td>DarkSide (ransomware como servicio)</td></tr>
+  <tr><td>Rescate</td><td>75 BTC ≈ US$ 4.4 millones</td></tr>
+  <tr><td>Recuperado por el DOJ</td><td>63.7 BTC ≈ US$ 2.3 millones (7 de junio)</td></tr>
+  <tr><td>Vía de entrada</td><td>Cuenta VPN heredada, una sola contraseña, sin MFA</td></tr>
+  <tr><td>Reinicio</td><td>Inicia el 12 de mayo; completo el 13 de mayo</td></tr>
+  <tr><td>Oleoducto</td><td>+8,800 km (5,500 millas), Texas → Nueva Jersey, ~45 % del combustible de la costa este</td></tr>
+  <tr><td>Capacidades (McKinsey)</td><td>L1 1.5 M b/d (40") · L2 1.2 M (36") · L3 885 mil · L4 700 mil (32")</td></tr>
+  <tr><td>CEO</td><td>Joseph Blount; testificó ante el Senado el 8 de junio de 2021</td></tr>
+  <tr><td>Sistema</td><td>18 tablas · 22 instalaciones · 15 tramos · 3 sistemas · 14 fuentes · 73 pruebas</td></tr>
+</table>
+
+</body>
+</html>

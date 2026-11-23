@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Colonial Pipeline 2021 — Del caso real al sistema tecnológico</title>
+<style>
+  @page { size: 1920px 1080px; margin: 0; }
+  :root {
+    --navy: #1E3354; --navy-2: #2C4570; --navy-3: #3B5A8C; --amber: #F4C150; --amber-d: #E59A2B;
+    --bg: #F4F6F9; --card: #FFFFFF; --border: #DDE3EC; --text: #1B2433; --muted: #5E6B82;
+    --ok: #2F8A57; --ok-bg: #E7F4EC; --bad: #C93C3C; --bad-bg: #FDECEC; --warn: #B7791F; --warn-bg: #FDF4DC; --info-bg: #E8EEF8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #777; }
+  body { font-family: Inter, system-ui, sans-serif; color: var(--text); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  b, strong { font-weight: 700; }
+
+  .slide { width: 1920px; height: 1080px; position: relative; overflow: hidden; background: var(--bg);
+    break-after: page; page-break-after: always; padding: 64px 96px 96px; display: flex; flex-direction: column; }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .head { margin-bottom: 36px; }
+  .kicker { display: flex; align-items: center; gap: 14px; font-size: 20px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .kicker .num { background: var(--navy); color: #fff; padding: 4px 10px; border-radius: 6px; letter-spacing: .04em; }
+  h1 { font-size: 92px; line-height: 1.02; font-weight: 800; letter-spacing: -.02em; color: var(--navy); }
+  h2 { font-size: 52px; line-height: 1.1; font-weight: 800; letter-spacing: -.015em; color: var(--navy); margin-top: 14px; }
+  h3 { font-size: 28px; line-height: 1.2; color: var(--navy); font-weight: 700; }
+  p, li { font-size: 24px; line-height: 1.45; }
+  .lead { font-size: 28px; color: var(--muted); max-width: 1500px; margin-top: 12px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 19px; }
+  .foot { position: absolute; left: 96px; right: 96px; bottom: 34px; display: flex; justify-content: space-between; font-size: 17px; color: var(--muted); }
+  .foot .pg { font-weight: 700; color: var(--navy); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 28px 32px; box-shadow: 0 1px 2px rgba(16,24,40,.05), 0 4px 14px rgba(16,24,40,.05); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .chip { display: inline-flex; align-items: center; gap: 10px; padding: 7px 16px; border-radius: 999px; font-size: 20px; font-weight: 700; white-space: nowrap; }
+  .chip::before { content: ''; width: 11px; height: 11px; border-radius: 50%; background: currentColor; }
+  .ok { background: var(--ok-bg); color: var(--ok); } .bad { background: var(--bad-bg); color: var(--bad); } .warn { background: var(--warn-bg); color: var(--warn); }
+  .tag { display: inline-block; font-weight: 800; font-size: 18px; padding: 4px 10px; border-radius: 6px; background: var(--amber); color: var(--navy); }
+  ul.dots { list-style: none; display: grid; gap: 14px; }
+  ul.dots li { position: relative; padding-left: 30px; }
+  ul.dots li::before { content: ''; position: absolute; left: 0; top: 13px; width: 12px; height: 12px; border-radius: 3px; background: var(--amber); }
+
+  /* Ventana de navegador para capturas */
+  .browser { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 18px 50px rgba(16,24,40,.18), 0 2px 8px rgba(16,24,40,.08); border: 1px solid #cfd6e2; }
+  .browser .bar { height: 38px; background: #E9EDF3; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #d6dce6; }
+  .browser .bar i { width: 12px; height: 12px; border-radius: 50%; background: #cfd5df; }
+  .browser .bar i:nth-child(1) { background: #EC6A5E; } .browser .bar i:nth-child(2) { background: #F4BF4F; } .browser .bar i:nth-child(3) { background: #61C554; }
+  .browser .bar span { margin-left: 14px; background: #fff; border-radius: 6px; padding: 4px 14px; font-size: 15px; color: var(--muted); flex: 1; max-width: 520px; }
+  .browser .view { overflow: hidden; }
+  .browser img { display: block; width: 100%; }
+
+  /* Section divider */
+  .divider { background: var(--navy); color: #fff; justify-content: center; }
+  .divider .big { font-size: 220px; font-weight: 800; color: var(--amber); line-height: 1; letter-spacing: -.04em; }
+  .divider h2 { color: #fff; font-size: 84px; }
+  .divider p { color: #C6D2E6; font-size: 30px; margin-top: 20px; }
+  .divider .foot { color: #9FB0CC; } .divider .foot .pg { color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- ============================== 1 PORTADA -->
+<section class="slide" style="background: var(--navy); color:#fff; justify-content:center; padding-left:120px;">
+  <svg style="position:absolute; right:-120px; top:0; height:1080px; opacity:.13" viewBox="0 0 600 1080" fill="none">
+    <path d="M300 -20 C 300 200, 520 260, 520 480 S 140 760, 140 1100" stroke="#F4C150" stroke-width="60"/>
+    <path d="M440 -20 C 440 200, 600 300, 600 520" stroke="#fff" stroke-width="18"/>
+  </svg>
+  <div style="display:flex; align-items:center; gap:20px">
+    <div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#F4C150,#E59A2B)"></div>
+    <div class="kicker" style="color:#B9C6DC">Soluciones Tecnológicas Empresariales · Semana 12</div>
+  </div>
+  <h1 style="color:#fff; margin-top:48px; font-size:108px">Colonial Pipeline 2021</h1>
+  <p style="font-size:44px; color:#F4C150; font-weight:700; margin-top:18px">Del caso real al sistema tecnológico</p>
+  <p style="font-size:30px; color:#C6D2E6; margin-top:28px; max-width:1300px">Plan de contingencia ante ransomware y un prototipo funcional para gestionar la respuesta y la recuperación.</p>
+  <div style="display:flex; gap:16px; margin-top:64px">
+    <span class="chip" style="background:rgba(255,255,255,.1); color:#fff">Caso 1 · Ciberseguridad</span>
+    <span class="chip" style="background:rgba(255,255,255,.1); color:#fff">React · Node.js · PostgreSQL</span>
+    <span class="chip" style="background:rgba(255,255,255,.1); color:#fff">MFA · Mapas de calor · Render</span>
+  </div>
+</section>
+
+<!-- ============================== 2 AGENDA -->
+<section class="slide">
+  <div class="head"><div class="kicker">Agenda</div><h2>Qué vamos a presentar</h2></div>
+  <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 20px">
+    <div class="card"><div class="tag">01</div><h3 style="margin-top:18px">El caso real</h3><p class="muted small" style="margin-top:8px">Qué pasó, cifras, cronología y causa raíz.</p></div>
+    <div class="card"><div class="tag">02</div><h3 style="margin-top:18px">El problema</h3><p class="muted small" style="margin-top:8px">Ficha del incidente: activos, riesgos y necesidades.</p></div>
+    <div class="card"><div class="tag">03</div><h3 style="margin-top:18px">Plan de contingencia</h3><p class="muted small" style="margin-top:8px">Diagrama de flujo con 4 decisiones y rutas alternativas.</p></div>
+    <div class="card"><div class="tag">04</div><h3 style="margin-top:18px">El sistema</h3><p class="muted small" style="margin-top:8px">Actores, módulos, reglas, base de datos y tecnologías.</p></div>
+    <div class="card"><div class="tag">05</div><h3 style="margin-top:18px">Prototipo y pruebas</h3><p class="muted small" style="margin-top:8px">Demostración y tres escenarios: inicial, exitoso y fallido.</p></div>
+    <div class="card"><div class="tag">06</div><h3 style="margin-top:18px">Panel, mapas y mejoras</h3><p class="muted small" style="margin-top:8px">Reto en Figma, mapas de calor integrados desde Rack y prevención.</p></div>
+  </div>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 3 DIVISOR CASO -->
+<section class="slide divider">
+  <div class="big">01</div>
+  <h2>El caso real</h2>
+  <p>Mayo de 2021: el mayor ciberataque divulgado contra infraestructura crítica de EE. UU.</p>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 4 CIFRAS -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">01</span> El caso real</div><h2>Un ataque a TI que paralizó el combustible de media costa este</h2></div>
+  <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 26px; flex:1">
+    <div class="card" style="border-top:8px solid var(--navy)"><div style="font-size:84px; font-weight:800; color:var(--navy); line-height:1">8,800 km</div><p style="margin-top:14px">de oleoducto (más de 5,500 millas), de Texas a Nueva Jersey.</p></div>
+    <div class="card" style="border-top:8px solid var(--navy)"><div style="font-size:84px; font-weight:800; color:var(--navy); line-height:1">~45%</div><p style="margin-top:14px">del combustible que consume la costa este de EE. UU. pasa por esta red.</p></div>
+    <div class="card" style="border-top:8px solid var(--bad)"><div style="font-size:84px; font-weight:800; color:var(--bad); line-height:1">5 días</div><p style="margin-top:14px">con todo el oleoducto detenido. Escasez y gasolina sobre US$ 3 por galón.</p></div>
+    <div class="card" style="border-top:8px solid var(--bad)"><div style="font-size:84px; font-weight:800; color:var(--bad); line-height:1">100 GB</div><p style="margin-top:14px">de datos corporativos robados en solo 2 horas antes del cifrado.</p></div>
+    <div class="card" style="border-top:8px solid var(--amber)"><div style="font-size:84px; font-weight:800; color:var(--warn); line-height:1">US$ 4.4 M</div><p style="margin-top:14px">pagados de rescate (75 bitcoin) al grupo DarkSide.</p></div>
+    <div class="card" style="border-top:8px solid var(--amber)"><div style="font-size:84px; font-weight:800; color:var(--warn); line-height:1">1 clave</div><p style="margin-top:14px">bastó para entrar: una cuenta VPN antigua <b>sin MFA</b>.</p></div>
+  </div>
+  <div class="foot"><span>Fuentes: TechTarget, NBC News, Insurance Journal (ver diapositiva de fuentes)</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 5 CRONOLOGIA -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">01</span> El caso real</div><h2>Cronología del incidente</h2></div>
+  <div style="position:relative; margin-top:70px">
+    <div style="position:absolute; left:0; right:0; top:46px; height:6px; background:linear-gradient(90deg,var(--bad) 0%,var(--bad) 30%,var(--amber) 55%,var(--ok) 72%,var(--navy) 100%); border-radius:3px"></div>
+    <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap: 18px; position:relative">
+      <div class="tl"><div class="tl-dot" style="--c:var(--bad)"></div><div class="tl-date">6 may</div><p class="tl-t">Intrusión por la VPN</p><p class="tl-d">Roban 100 GB de datos en 2 horas.</p></div>
+      <div class="tl"><div class="tl-dot" style="--c:var(--bad)"></div><div class="tl-date">7 may</div><p class="tl-t">Ransomware en TI</p><p class="tl-d">Colonial <b>detiene todo el oleoducto</b> y paga 75 BTC.</p></div>
+      <div class="tl"><div class="tl-dot" style="--c:var(--warn)"></div><div class="tl-date">9 may</div><p class="tl-t">Emergencia federal</p><p class="tl-d">Se flexibiliza el transporte de combustible por carretera.</p></div>
+      <div class="tl"><div class="tl-dot" style="--c:var(--amber)"></div><div class="tl-date">12 may</div><p class="tl-t">Inicia el reinicio</p><p class="tl-d">Manual y por tramos, validando cada uno.</p></div>
+      <div class="tl"><div class="tl-dot" style="--c:var(--ok)"></div><div class="tl-date">13 may</div><p class="tl-t">Reinicio completo</p><p class="tl-d">La empresa anuncia la operación de todo el sistema.</p></div>
+      <div class="tl"><div class="tl-dot" style="--c:var(--navy)"></div><div class="tl-date">7 jun</div><p class="tl-t">Recuperan parte del rescate</p><p class="tl-d">El DOJ incauta 63.7 BTC (≈ US$ 2.3 M).</p></div>
+      <div class="tl"><div class="tl-dot" style="--c:var(--navy)"></div><div class="tl-date">8 jun</div><p class="tl-t">El CEO ante el Senado</p><p class="tl-d">Admite: VPN heredada, una sola contraseña, sin MFA.</p></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:auto; display:flex; gap:28px; align-items:center; background:var(--navy); border:0">
+    <div style="font-size:90px; line-height:.8; color:var(--amber); font-weight:800">“</div>
+    <p style="color:#fff; font-size:30px">La empresa tenía planes generales de ciberseguridad, pero <b style="color:var(--amber)">ningún plan específico para ransomware</b>. <span style="color:#B9C6DC; font-size:22px">— Joseph Blount, CEO, testimonio en el Senado (paráfrasis)</span></p>
+  </div>
+  <style>
+    .tl { text-align:left; }
+    .tl-dot { width: 30px; height: 30px; border-radius: 50%; background: var(--c); border: 6px solid var(--bg); box-shadow: 0 0 0 2px var(--c); margin: 34px 0 22px; }
+    .tl-date { font-size: 34px; font-weight: 800; color: var(--navy); }
+    .tl-t { font-size: 23px; font-weight: 700; margin-top: 8px; line-height:1.25 }
+    .tl-d { font-size: 20px; color: var(--muted); margin-top: 6px; line-height:1.35 }
+  </style>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 6 CAUSA RAIZ -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">01</span> El caso real</div><h2>Causa raíz: una cadena de fallas evitables</h2></div>
+  <div style="display:flex; align-items:stretch; gap:0; margin-top:10px">
+    <div class="chain" style="--c:var(--bad)"><div class="ci">1</div><h3>Cuenta VPN heredada</h3><p>Una cuenta antigua que seguía activa sin que nadie la usara.</p></div>
+    <div class="arrow">›</div>
+    <div class="chain" style="--c:var(--bad)"><div class="ci">2</div><h3>Contraseña filtrada</h3><p>Probablemente reutilizada y expuesta en otra brecha de datos.</p></div>
+    <div class="arrow">›</div>
+    <div class="chain" style="--c:var(--bad)"><div class="ci">3</div><h3>Sin MFA</h3><p>Un solo factor: con la contraseña bastaba para entrar.</p></div>
+    <div class="arrow">›</div>
+    <div class="chain" style="--c:var(--warn)"><div class="ci">4</div><h3>Ransomware en TI</h3><p>DarkSide cifra sistemas corporativos, incluida la facturación.</p></div>
+    <div class="arrow">›</div>
+    <div class="chain" style="--c:var(--navy)"><div class="ci">5</div><h3>OT detenida</h3><p>La red que mueve el combustible <b>no fue cifrada</b>, pero se detuvo por precaución.</p></div>
+  </div>
+  <div class="grid2" style="margin-top:44px">
+    <div class="card" style="border-left:8px solid var(--bad)">
+      <h3>Lo que falló</h3>
+      <ul class="dots" style="margin-top:16px">
+        <li>Gestión de identidades: cuentas sin dar de baja.</li>
+        <li>Autenticación débil en el acceso remoto.</li>
+        <li>Poca segmentación entre TI y OT: sin facturación no se podía operar.</li>
+        <li>No había un plan de contingencia para ransomware.</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left:8px solid var(--ok)">
+      <h3>Lo que funcionó</h3>
+      <ul class="dots" style="margin-top:16px">
+        <li>Detención preventiva rápida: se evitó un daño físico.</li>
+        <li>Aviso al FBI en pocas horas.</li>
+        <li>Reinicio manual y gradual por tramos.</li>
+        <li>Al final se recuperó con <b>sus propios respaldos</b>.</li>
+      </ul>
+    </div>
+  </div>
+  <style>
+    .chain { flex:1; background:var(--card); border:1px solid var(--border); border-top:8px solid var(--c); border-radius:16px; padding:24px 24px 26px; }
+    .chain h3 { font-size:25px; margin-top:12px } .chain p { font-size:20px; color:var(--muted); margin-top:8px; line-height:1.35 }
+    .ci { width:40px; height:40px; border-radius:50%; background:var(--c); color:#fff; display:grid; place-items:center; font-weight:800; font-size:20px }
+    .arrow { display:grid; place-items:center; font-size:60px; color:#B5BFCE; width:44px; font-weight:300 }
+  </style>
+  <div class="foot"><span>Fuentes: testimonio del CEO ante el Senado (Insurance Journal, NBC News), TechTarget</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 7 DIVISOR PROBLEMA -->
+<section class="slide divider">
+  <div class="big">02</div>
+  <h2>El problema</h2>
+  <p>Qué se afectó, qué riesgos había y qué necesitaba la organización.</p>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 8 FICHA -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">02</span> El problema</div><h2>Ficha del incidente</h2></div>
+  <div style="display:grid; grid-template-columns: 300px 1fr; gap: 0; background:var(--card); border:1px solid var(--border); border-radius:18px; overflow:hidden">
+    <div class="fk">Incidente</div><div class="fv">Ransomware <b>DarkSide</b> (modelo “ransomware como servicio”) sobre la red de TI corporativa, 7 de mayo de 2021.</div>
+    <div class="fk">Activos afectados</div><div class="fv"><b>TI:</b> facturación, identidades (directorio activo), VPN y datos corporativos (100 GB). <b>OT, indirectamente:</b> SCADA y los tramos del oleoducto, detenidos por precaución.</div>
+    <div class="fk">Riesgos</div><div class="fv">Propagación a la red OT · TI y OT poco segmentadas · respaldos sin verificar · extorsión por filtración de datos · desabastecimiento regional.</div>
+    <div class="fk">Consecuencias</div><div class="fv">5 días sin bombeo · escasez y compras de pánico · alza del precio · rescate de US$ 4.4 M · escrutinio del Congreso y daño reputacional.</div>
+    <div class="fk" style="border-bottom:0; background:var(--navy); color:#fff">Necesidades</div><div class="fv" style="border-bottom:0; background:var(--info-bg)">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px 36px">
+        <span>✔ Un plan de contingencia con decisiones claras</span>
+        <span>✔ Ver en tiempo real qué servicio está caído</span>
+        <span>✔ Registro auditable de quién decidió qué</span>
+        <span>✔ Coordinar TI, OT, legal y comunicaciones</span>
+        <span>✔ Recuperar por tramos, validando cada paso</span>
+        <span>✔ Cerrar con lecciones aprendidas</span>
+      </div>
+    </div>
+  </div>
+  <style>
+    .fk { padding: 24px 28px; font-weight: 800; font-size: 23px; color: var(--navy); background: #F7F9FC; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); display:flex; align-items:center }
+    .fv { padding: 24px 32px; font-size: 23px; line-height: 1.45; border-bottom: 1px solid var(--border); }
+  </style>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 9 DIVISOR PLAN -->
+<section class="slide divider">
+  <div class="big">03</div>
+  <h2>Plan de contingencia</h2>
+  <p>Inicio, detección, evaluación, 4 decisiones, rutas alternativas, recuperación y cierre.</p>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 10 DIAGRAMA -->
+<section class="slide" style="padding-bottom:70px">
+  <div class="head" style="margin-bottom:18px; display:flex; justify-content:space-between; align-items:flex-end">
+    <div><div class="kicker"><span class="num">03</span> Plan de contingencia</div><h2>Diagrama de flujo del plan</h2></div>
+    <div class="legend">
+      <span><i style="background:var(--navy); border-radius:10px"></i>Inicio / fin</span>
+      <span><i style="background:#fff"></i>Acción</span>
+      <span><i style="background:var(--amber); transform:rotate(45deg) scale(.8)"></i>Decisión</span>
+      <span><i style="background:var(--bad-bg); border-color:var(--bad)"></i>Incidente / reintento</span>
+      <span><i style="background:var(--ok-bg); border-color:var(--ok)"></i>Recuperación</span>
+    </div>
+  </div>
+  <div id="flow" style="position:relative; width:1728px; height:830px"></div>
+  <style>
+    .legend { display:flex; gap:22px; font-size:18px; color:var(--muted); }
+    .legend span { display:flex; align-items:center; gap:8px }
+    .legend i { width:22px; height:16px; border:1.5px solid #9AA6B8; border-radius:4px; display:inline-block }
+    .fn { position:absolute; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; border-radius:12px; border:2px solid #A9B4C5; background:#fff; padding:6px 10px; }
+    .fn b { font-size:19px; color:var(--navy); letter-spacing:.02em }
+    .fn span { font-size:15px; color:var(--text); line-height:1.25; margin-top:3px }
+    .fn.inc { background:var(--bad-bg); border-color:var(--bad) } .fn.inc b { color:var(--bad) }
+    .fn.rec { background:var(--ok-bg); border-color:var(--ok) } .fn.rec b { color:var(--ok) }
+    .fn.term { background:var(--navy); border-color:var(--navy); border-radius:40px } .fn.term b { color:#fff }
+    .fn.chipn { border-radius:10px; padding:6px 12px } .fn.chipn span { margin:0; font-size:15px }
+    .fn.alt { border-style:dashed; border-color:var(--navy-3) }
+    .dtext { position:absolute; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+    .dtext b { font-size:17px; color:var(--navy) } .dtext span { font-size:14px; line-height:1.2; color:var(--text); margin-top:2px }
+    .lbl { position:absolute; font-size:17px; font-weight:800; padding:1px 7px; border-radius:5px; background:var(--bg) }
+  </style>
+  <div class="foot" style="bottom:26px"><span>Corregido: “Reintentar” regresa a Erradicación y la “Ruta alternativa” se une a Servicio restablecido.</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 11 DIAGRAMA → SOFTWARE -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">03</span> Plan de contingencia</div><h2>Cada decisión del diagrama la ejecuta el sistema</h2>
+    <p class="lead">El plan no queda en papel: el prototipo lo implementa como una máquina de estados y no permite saltarse pasos.</p></div>
+  <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 22px; flex:1">
+    <div class="dec"><div class="tag">D1</div><h3>¿El ataque puede llegar a OT?</h3>
+      <div class="br yes"><b>Sí</b> El sistema marca los 4 servicios OT como <b>afectados</b> y asigna al operador OT la detención.</div>
+      <div class="br no"><b>No</b> Monitoreo reforzado; solo se contienen los equipos de TI.</div></div>
+    <div class="dec"><div class="tag">D2</div><h3>¿Hay respaldos limpios y verificados?</h3>
+      <div class="br yes"><b>Sí</b> Se asigna la restauración desde respaldos al analista TI.</div>
+      <div class="br no"><b>No</b> Se asigna a <b>legal</b> evaluar el rescate y el descifrado con las autoridades.</div></div>
+    <div class="dec"><div class="tag">D3</div><h3>¿Sistemas seguros para reiniciar?</h3>
+      <div class="br yes"><b>Sí</b> Los servicios pasan a <b>en recuperación</b>.</div>
+      <div class="br no"><b>No</b> Análisis forense y <b>reintento</b>. Al 3.er fallo, la severidad sube a crítica.</div></div>
+    <div class="dec"><div class="tag">D4</div><h3>¿Riesgo de desabastecimiento?</h3>
+      <div class="br yes"><b>Sí</b> Ruta alternativa: camiones, gobierno y comunicación pública.</div>
+      <div class="br no"><b>No</b> Se pasa directo a servicio restablecido.</div></div>
+  </div>
+  <div class="card" style="margin-top:30px; display:flex; gap:40px; align-items:center">
+    <h3 style="white-space:nowrap">Controles del flujo</h3>
+    <p class="small">Solo el <b>coordinador</b> decide · cada decisión exige una <b>justificación</b> · no se avanza con acciones pendientes · todo queda en el <b>historial</b> con usuario y hora.</p>
+  </div>
+  <style>
+    .dec { background:var(--card); border:1px solid var(--border); border-radius:18px; padding:24px; display:flex; flex-direction:column; gap:14px }
+    .dec h3 { font-size:27px; min-height:66px }
+    .br { flex:1; border-radius:12px; padding:18px 20px; font-size:22px; line-height:1.4 }
+    .br b:first-child { display:block; font-size:21px; margin-bottom:6px }
+    .br.yes { background:var(--ok-bg) } .br.yes b:first-child { color:var(--ok) }
+    .br.no { background:var(--bad-bg) } .br.no b:first-child { color:var(--bad) }
+  </style>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 12 DIVISOR SISTEMA -->
+<section class="slide divider">
+  <div class="big">04</div>
+  <h2>El sistema</h2>
+  <p>Centro de Contingencia: usuarios, módulos, reglas, datos y tecnologías.</p>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 13 ACTORES Y MODULOS -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">04</span> El sistema</div><h2>Usuarios y módulos</h2></div>
+  <div style="display:grid; grid-template-columns: 1fr 1.15fr; gap: 36px; flex:1">
+    <div class="card" style="display:flex; flex-direction:column">
+      <h3>5 actores con permisos distintos</h3>
+      <div class="actors">
+        <div><i style="background:var(--navy)">CO</i><b>Coordinador de respuesta</b><span>Decide D1–D4, avanza y cierra el incidente.</span></div>
+        <div><i style="background:#3B5A8C">TI</i><b>Analista TI</b><span>Contiene, erradica y cambia el estado de servicios TI.</span></div>
+        <div><i style="background:var(--ok)">OT</i><b>Operador OT</b><span>Detiene y reinicia tramos y SCADA.</span></div>
+        <div><i style="background:var(--warn)">LG</i><b>Asesoría legal</b><span>Evalúa el rescate con las autoridades.</span></div>
+        <div><i style="background:var(--bad)">CM</i><b>Comunicaciones</b><span>Ejecuta la ruta alternativa y la comunicación pública.</span></div>
+      </div>
+    </div>
+    <div style="display:grid; gap:12px; grid-auto-rows:1fr">
+      <div class="mod"><div class="mi">1</div><div><b>Acceso seguro</b><span>Contraseña + código MFA (TOTP), bloqueo tras 5 intentos.</span></div></div>
+      <div class="mod"><div class="mi">2</div><div><b>Incidentes y flujo D1–D4</b><span>Registro real o simulacro, decisiones guiadas y justificadas.</span></div></div>
+      <div class="mod"><div class="mi">3</div><div><b>Acciones y evidencias</b><span>Tareas por responsable y archivos con huella SHA-256.</span></div></div>
+      <div class="mod"><div class="mi">4</div><div><b>Panel de servicios</b><span>Operativo, afectado o en recuperación, cada 10 s.</span></div></div>
+      <div class="mod"><div class="mi">5</div><div><b>Mapa de calor de la red real</b><span>Tramos y sistemas que se aíslan solos, con fuente en cada dato.</span></div></div>
+      <div class="mod"><div class="mi">6</div><div><b>Rondas y bitácora encadenada</b><span>Verificación antes de reconectar; historial a prueba de alteraciones.</span></div></div>
+      <div class="mod"><div class="mi">7</div><div><b>Analítica</b><span>MTTR, tiempo por etapa, horas fuera de servicio, exportación CSV.</span></div></div>
+    </div>
+  </div>
+  <style>
+    .actors { flex:1; display:flex; flex-direction:column; justify-content:space-around; margin-top:20px }
+    .actors > div { display:grid; grid-template-columns: 64px 1fr; column-gap:18px; align-items:center }
+    .actors i { grid-row: span 2; width:64px; height:64px; border-radius:50%; color:#fff; display:grid; place-items:center; font-style:normal; font-weight:800; font-size:18px }
+    .actors b { font-size:26px; color:var(--navy) } .actors span { font-size:21px; color:var(--muted) }
+    .mod { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:10px 20px; display:flex; gap:18px; align-items:center }
+    .mod b { display:block; font-size:23px; color:var(--navy) } .mod span { font-size:18px; color:var(--muted) }
+    .mi { flex:none; width:48px; height:48px; border-radius:12px; background:var(--amber); color:var(--navy); font-weight:800; font-size:22px; display:grid; place-items:center }
+  </style>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 14 REGLAS -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">04</span> El sistema</div><h2>Reglas de negocio</h2>
+    <p class="lead">Están en el servidor: aunque alguien manipule la interfaz, la API las hace cumplir.</p></div>
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 22px; flex:1; grid-auto-rows:1fr">
+    <div class="rule"><b>1</b><p>No se avanza ni se decide mientras haya <b>acciones pendientes</b> en la etapa.</p></div>
+    <div class="rule"><b>2</b><p>Solo el <b>coordinador</b> toma decisiones, y cada una exige una justificación.</p></div>
+    <div class="rule"><b>3</b><p>D1 = Sí <b>detiene todos los servicios OT</b> y los vincula al incidente.</p></div>
+    <div class="rule"><b>4</b><p>D3 = Sí se <b>rechaza</b> si falló alguna acción del intento actual de erradicación.</p></div>
+    <div class="rule"><b>5</b><p>Tres validaciones fallidas <b>escalan</b> la severidad a crítica.</p></div>
+    <div class="rule"><b>6</b><p>Un servicio no pasa de afectado a operativo sin pasar por <b>recuperación</b>.</p></div>
+    <div class="rule"><b>7</b><p>Al caer un servicio, sus <b>tramos y sistemas se aíslan solos</b>; no se reinician sin una verificación OK.</p></div>
+    <div class="rule"><b>8</b><p>No se cierra sin <b>lecciones aprendidas</b> ni con acciones abiertas.</p></div>
+  </div>
+  <style>
+    .rule { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 26px; display:flex; gap:22px; align-items:center }
+    .rule > b { flex:none; width:58px; height:58px; border-radius:50%; background:var(--navy); color:#fff; display:grid; place-items:center; font-size:22px }
+    .rule p { font-size:26px }
+  </style>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 15 BASE DE DATOS -->
+<section class="slide">
+  <div class="head" style="margin-bottom:20px"><div class="kicker"><span class="num">04</span> El sistema</div><h2>Modelo de datos</h2></div>
+  <div class="dm">
+    <div class="dmg" style="--c:var(--navy)"><h4>Plan de contingencia</h4><p>etapas · decisiones_plan · recursos_tecnologicos · etapa_recursos</p></div>
+    <div class="dmg" style="--c:#3B5A8C"><h4>Actores y red</h4><p>usuarios · servicios · <b>ubicaciones</b> · <b>activos</b> (tramos y sistemas, con fuentes)</p></div>
+    <div class="dmg" style="--c:var(--bad)"><h4>Incidente</h4><p>incidentes · incidente_servicios · acciones · decisiones</p></div>
+    <div class="dmg" style="--c:var(--warn)"><h4>Evidencias</h4><p>evidencias · evidencia_contenidos</p></div>
+    <div class="dmg" style="--c:var(--ok)"><h4>Verificación</h4><p><b>rondas</b> · <b>ronda_items</b></p></div>
+    <div class="dmg" style="--c:#4a1d1d"><h4>Auditoría</h4><p>historial_recuperacion <b>(encadenado SHA-256)</b> · eventos_seguridad</p></div>
+  </div>
+  <div class="grid3" style="margin-top:34px">
+    <div class="card" style="padding:30px 32px"><div style="font-size:72px; font-weight:800; color:var(--navy)">18</div><p class="small">tablas en PostgreSQL 16, con 13 tipos ENUM, claves foráneas, CHECK y UNIQUE.</p></div>
+    <div class="card" style="padding:30px 32px"><div style="font-size:72px; font-weight:800; color:var(--navy)">3</div><p class="small">triggers: historial y eventos de seguridad <b>solo inserción</b>, y encadenamiento SHA-256.</p></div>
+    <div class="card" style="padding:30px 32px"><div style="font-size:72px; font-weight:800; color:var(--navy)">8</div><p class="small">scripts SQL entregables (00–07); el servidor ejecuta esos mismos archivos.</p></div>
+  </div>
+  <style>
+    .dm { display:grid; grid-template-columns: repeat(3, 1fr); gap:24px }
+    .dmg { background:var(--card); border:1px solid var(--border); border-left:10px solid var(--c); border-radius:16px; padding:30px 32px; min-height:190px }
+    .dmg h4 { font-size:30px; color:var(--navy) }
+    .dmg p { font-family: ui-monospace, Menlo, monospace; font-size:23px; line-height:1.65; margin-top:12px; color:#334 }
+    .dmg b { color:var(--warn) }
+  </style>
+  <div class="foot"><span>En naranja, lo agregado para los mapas de calor · incluye las 5 tablas que pide la actividad (Incidentes, Usuarios, Acciones, Servicios, HistorialRecuperacion)</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 16 ARQUITECTURA -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">04</span> El sistema</div><h2>Arquitectura y tecnologías</h2></div>
+  <div style="display:flex; align-items:stretch; gap:0">
+    <div class="layer"><small>Cliente</small><b>React 19 + Vite 8</b><span>Panel, mapas, flujo · Recharts</span></div>
+    <div class="arr">⇄<small>JSON · REST</small></div>
+    <div class="layer"><small>API</small><b>Node 22 + Express 5</b><span>zod · helmet · sesión firmada · MFA</span></div>
+    <div class="arr">→</div>
+    <div class="layer" style="border-color:var(--amber); background:#FFFBEE"><small>Dominio</small><b>Máquina de estados</b><span>Flujo, permisos y riesgo</span></div>
+    <div class="arr">→</div>
+    <div class="layer"><small>Datos</small><b>PostgreSQL 16</b><span>Triggers y cadena SHA-256</span></div>
+  </div>
+  <table class="why">
+    <tr><th>Tecnología</th><th>Por qué la elegimos</th></tr>
+    <tr><td><b>React + Vite</b></td><td>Componentes reutilizables (tarjetas, mapa, badges); el panel y los mapas se actualizan sin recargar.</td></tr>
+    <tr><td><b>Node.js + Express 5</b></td><td>El mismo lenguaje en cliente y servidor; API REST con validación estricta (zod) en cada entrada.</td></tr>
+    <tr><td><b>PostgreSQL 16</b></td><td>Transacciones: una decisión y todos sus efectos se guardan juntos o no se guarda nada. Los triggers hacen la bitácora inmutable y encadenada.</td></tr>
+    <tr><td><b>Seguridad</b></td><td>Contraseñas con scrypt, MFA con TOTP (RFC 6238), secretos cifrados con AES-256-GCM, cookie httpOnly y SameSite.</td></tr>
+    <tr><td><b>Render + GitHub Actions</b></td><td>Despliegue en la nube con un Blueprint; cada cambio corre las 73 pruebas y la auditoría de dependencias.</td></tr>
+  </table>
+  <style>
+    .layer { flex:1; background:var(--card); border:2px solid var(--border); border-radius:16px; padding:28px 28px; display:flex; flex-direction:column; gap:4px }
+    .layer small { font-size:16px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted) }
+    .layer b { font-size:27px; color:var(--navy) } .layer span { font-size:19px; color:var(--muted) }
+    .arr { width:110px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:40px; color:var(--navy-3) }
+    .arr small { font-size:14px; color:var(--muted); font-weight:600 }
+    .why { width:100%; margin-top:34px; border-collapse:separate; border-spacing:0; background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden }
+    .why th { text-align:left; background:var(--navy); color:#fff; font-size:21px; padding:16px 26px }
+    .why td { font-size:23px; padding:19px 26px; border-top:1px solid var(--border); line-height:1.4; vertical-align:top }
+    .why td:first-child { width:260px; color:var(--navy) }
+  </style>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 17 DIVISOR PROTOTIPO -->
+<section class="slide divider">
+  <div class="big">05</div>
+  <h2>Prototipo y pruebas</h2>
+  <p>Capturas reales de la aplicación funcionando.</p>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== ACCESO MFA -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">05</span> Prototipo</div><h2>Paso 0 · Acceso seguro: la lección del caso, aplicada</h2></div>
+  <div style="display:grid; grid-template-columns: 1260px 1fr; gap:44px">
+    <div class="browser" style="align-self:start"><div class="bar"><i></i><i></i><i></i><span>centro-contingencia.onrender.com</span></div>
+      <div class="view" style="height:760px"><img src="capturas-real/r00-login.png"></div></div>
+    <div style="padding-top:10px">
+      <ul class="dots">
+        <li>Contraseña + <b>código MFA</b> de Google o Microsoft Authenticator.</li>
+        <li>Se puede <b>exigir MFA por rol</b>: lo que le faltó a la VPN de Colonial.</li>
+        <li>Bloqueo de 15 min tras <b>5 intentos</b> y límite por IP.</li>
+        <li>Todo acceso queda en la bitácora de seguridad.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Captura real del prototipo</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 18 REGISTRO -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">05</span> Prototipo</div><h2>Paso 1 · Registrar el incidente</h2></div>
+  <div style="display:grid; grid-template-columns: 1260px 1fr; gap:44px; flex:1; min-height:0">
+    <div class="browser" style="align-self:start"><div class="bar"><i></i><i></i><i></i><span>centro-contingencia.onrender.com/#/nuevo</span></div>
+      <div class="view" style="height:760px"><img src="capturas-real/r02-registro.png"></div></div>
+    <div style="padding-top:10px">
+      <ul class="dots">
+        <li>El analista TI reporta la <b>nota de rescate</b>.</li>
+        <li>Se eligen los servicios afectados: <b>facturación, VPN y directorio activo</b>.</li>
+        <li>Al registrar, esos servicios pasan a <span class="chip bad" style="font-size:18px">Afectado</span> y los servidores de la VPN quedan <b>aislados</b> solos.</li>
+        <li>El sistema crea el código <b>INC-AAAA-NNNN</b>, abre la etapa de Detección y asigna la primera acción.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Captura real del prototipo</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 19 DECISION D1 -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">05</span> Prototipo</div><h2>Paso 2 · El sistema guía cada decisión</h2></div>
+  <div style="display:grid; grid-template-columns: 1260px 1fr; gap:44px">
+    <div class="browser" style="align-self:start"><div class="bar"><i></i><i></i><i></i><span>centro-contingencia.onrender.com/#/incidentes/1</span></div>
+      <div class="view" style="height:760px"><img src="capturas-real/r03-decision-d1.png"></div></div>
+    <div style="padding-top:10px">
+      <ul class="dots">
+        <li>Una <b>barra de progreso</b> muestra la etapa actual del plan.</li>
+        <li>La decisión muestra la pregunta y <b>qué pasa con cada respuesta</b>.</li>
+        <li>Sin justificación, los botones <b>Sí / No</b> no se activan.</li>
+        <li>Acciones, servicios vinculados e historial están en la misma pantalla.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Captura real del prototipo · decisión D1</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 20 PANEL EN VIVO -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">05</span> Prototipo</div><h2>Paso 3 · El panel refleja la crisis al instante</h2></div>
+  <div style="display:grid; grid-template-columns: 1260px 1fr; gap:44px">
+    <div class="browser" style="align-self:start"><div class="bar"><i></i><i></i><i></i><span>centro-contingencia.onrender.com/#/</span></div>
+      <div class="view" style="height:760px"><img src="capturas-real/r04-panel-crisis.png"></div></div>
+    <div style="padding-top:10px">
+      <div class="card" style="padding:20px 26px; margin-bottom:24px"><div style="display:flex; gap:30px">
+        <div><div style="font-size:64px; font-weight:800; color:var(--bad)">7</div><p class="small muted">afectados</p></div>
+        <div><div style="font-size:64px; font-weight:800; color:var(--navy)">30%</div><p class="small muted">disponibilidad</p></div></div></div>
+      <ul class="dots">
+        <li>Tras D1 = Sí, los <b>4 servicios OT</b> aparecen detenidos, con el motivo.</li>
+        <li>El incidente abierto y los <b>últimos eventos</b> están a la derecha.</li>
+        <li>Cada rol solo puede cambiar los servicios de su dominio.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Captura real del prototipo · panel tras D1 = Sí</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 21 PRUEBAS -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">05</span> Pruebas</div><h2>Tres escenarios probados</h2></div>
+  <div style="display:grid; grid-template-columns: repeat(3, 1fr) 560px; gap: 24px; flex:1">
+    <div class="sc" style="--c:var(--navy)"><span class="sct">Escenario 1</span><h3>Incidente inicial</h3><p class="goal">Comprobar que el sistema registra el ataque y aplica la primera decisión.</p>
+      <ol><li>Registrar con 3 servicios TI</li><li>Bloqueo si hay acciones pendientes</li><li>D1 = Sí</li></ol>
+      <div class="res">✔ OT detenida · disponibilidad 30%</div></div>
+    <div class="sc" style="--c:var(--ok)"><span class="sct">Escenario 2</span><h3>Recuperación exitosa</h3><p class="goal">Recorrer el plan completo, como en el caso real, hasta el cierre.</p>
+      <ol><li>D2 = No · D3 = Sí</li><li>D4 = Sí → ruta alternativa</li><li>Cierre con lecciones aprendidas</li></ol>
+      <div class="res">✔ 10/10 operativos · 4 decisiones auditadas</div></div>
+    <div class="sc" style="--c:var(--bad)"><span class="sct">Escenario 3</span><h3>Recuperación fallida</h3><p class="goal">Verificar que no se pueda reiniciar si la erradicación falló.</p>
+      <ol><li>La erradicación falla</li><li>D3 = Sí <b>rechazada</b></li><li>D3 = No → forense → reintento</li></ol>
+      <div class="res">✔ 3 fallos escalan a crítica</div></div>
+    <div class="term">
+      <div class="tbar"><i></i><i></i><i></i><span>server › npm test</span></div>
+      <pre><span class="g">ok</span>  Escenario 1: incidente inicial
+<span class="g">ok</span>  Escenario 2: recuperación exitosa
+<span class="g">ok</span>  Escenario 3: recuperación fallida
+<span class="g">ok</span>  Reglas de negocio
+<span class="g">ok</span>  Seguridad · MFA y auditoría
+<span class="g">ok</span>  Evidencias multimedia
+<span class="g">ok</span>  Red del oleoducto con fuentes
+<span class="g">ok</span>  Rondas de verificación
+<span class="g">ok</span>  Bitácora encadenada SHA-256
+<span class="g">ok</span>  … 22 grupos en total
+
+# tests 73
+# pass  <span class="g">73</span>
+# fail  0</pre>
+    </div>
+  </div>
+  <style>
+    .sc { background:var(--card); border:1px solid var(--border); border-top:8px solid var(--c); border-radius:18px; padding:26px; display:flex; flex-direction:column }
+    .sct { font-size:17px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--c) }
+    .sc h3 { font-size:34px; margin:10px 0 12px }
+    .sc ol { padding-left:30px; display:grid; gap:18px; margin-top:22px } .sc li { font-size:24px; line-height:1.35 }
+    .sc .goal { font-size:21px; color:var(--muted); line-height:1.4 }
+    .res { margin-top:auto; background:#F2F5F9; border-radius:12px; padding:18px 20px; font-size:22px; font-weight:700; color:var(--navy) }
+    .term { background:#0F1726; border-radius:16px; overflow:hidden; display:flex; flex-direction:column }
+    .tbar { background:#1C2638; padding:12px 16px; display:flex; gap:8px; align-items:center }
+    .tbar i { width:12px; height:12px; border-radius:50% } .tbar i:nth-child(1){background:#EC6A5E} .tbar i:nth-child(2){background:#F4BF4F} .tbar i:nth-child(3){background:#61C554}
+    .tbar span { color:#8FA0BC; font-size:15px; margin-left:10px; font-family: ui-monospace, Menlo, monospace }
+    .term pre { color:#D5DEEE; font-size:19px; line-height:1.75; padding:26px 24px; font-family: ui-monospace, Menlo, monospace; white-space:pre-wrap }
+    .term .g { color:#5FD38D; font-weight:700 }
+  </style>
+  <div class="foot"><span>73 pruebas con node:test sobre PostgreSQL · simulacro automático: 17 de 17 pasos correctos</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 22 FALLIDA -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">05</span> Pruebas</div><h2>Escenario fallido: el sistema no deja reiniciar a ciegas</h2></div>
+  <div style="display:grid; grid-template-columns: 1260px 1fr; gap:44px">
+    <div class="browser" style="align-self:start"><div class="bar"><i></i><i></i><i></i><span>centro-contingencia.onrender.com/#/incidentes/1</span></div>
+      <div class="view" style="height:760px"><img src="capturas-real/r07-analisis-forense.png"></div></div>
+    <div style="padding-top:10px">
+      <ul class="dots">
+        <li>La acción de erradicación se marca como <span class="chip bad" style="font-size:18px">Fallida</span>: “persistencia en el controlador de dominio”.</li>
+        <li>Si se intenta validar el reinicio (D3 = Sí), la API responde <b>409</b> y lo rechaza.</li>
+        <li>Se toma la ruta <b>No</b>: análisis forense, con un contador de intentos.</li>
+        <li>El botón <b>Reintentar erradicación</b> vuelve a la etapa con una acción nueva.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Captura real del prototipo · ruta “Reintentar”</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 23 EXITOSA -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">05</span> Pruebas</div><h2>Escenario exitoso: incidente cerrado y servicio al 100%</h2></div>
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:36px">
+    <div><div class="browser"><div class="bar"><i></i><i></i><i></i><span>Incidente cerrado</span></div>
+      <div class="view" style="height:520px"><img src="capturas-real/r09-incidente-cerrado.png"></div></div>
+      <p class="small" style="margin-top:18px">Todas las etapas completas, decisiones <b>D1 Sí · D2 No · D3 No → Sí · D4 Sí</b> y lecciones aprendidas registradas.</p></div>
+    <div><div class="browser"><div class="bar"><i></i><i></i><i></i><span>Panel de servicios</span></div>
+      <div class="view" style="height:520px"><img src="capturas-real/r10-panel-final.png"></div></div>
+      <p class="small" style="margin-top:18px">Servicios en <span class="chip ok" style="font-size:17px">Operativo</span> 10 de 10, y los activos aislados se reconectaron solo tras pasar la ronda de verificación.</p></div>
+  </div>
+  <div class="foot"><span>Capturas reales del prototipo</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 24 DIVISOR PANEL -->
+<section class="slide divider">
+  <div class="big">06</div>
+  <h2>Panel, mapas y mejoras</h2>
+  <p>Reto adicional en Figma, funciones integradas desde Rack · Operación y prevención.</p>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 25 FIGMA -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">06</span> Reto adicional</div><h2>Panel de estado de servicios, diseñado en Figma</h2></div>
+  <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 300px; gap:26px; align-items:start">
+    <div><div class="fig"><img src="1-panel-normal.png"></div><p class="cap"><span class="chip ok" style="font-size:17px">Normal</span> 10/10 · 100%</p></div>
+    <div><div class="fig"><img src="2-panel-crisis.png"></div><p class="cap"><span class="chip bad" style="font-size:17px">Crisis</span> 7 afectados · 30%</p></div>
+    <div><div class="fig"><img src="3-panel-recuperacion.png"></div><p class="cap"><span class="chip warn" style="font-size:17px">Recuperación</span> 4 en curso · 60%</p></div>
+    <div class="phone"><div class="scr"><img src="movil-a.png"></div></div>
+  </div>
+  <div class="grid3" style="margin-top:34px">
+    <div class="card" style="padding:22px 26px"><b style="color:var(--navy); font-size:23px">Accesible</b><p class="small muted" style="margin-top:6px">El estado nunca depende solo del color: cada badge lleva su texto.</p></div>
+    <div class="card" style="padding:22px 26px"><b style="color:var(--navy); font-size:23px">10 componentes con variantes</b><p class="small muted" style="margin-top:6px">Tarjeta de servicio, KPI, badges, eventos. Un cambio se propaga a todas las pantallas.</p></div>
+    <div class="card" style="padding:22px 26px"><b style="color:var(--navy); font-size:23px">Mismo diseño que el código</b><p class="small muted" style="margin-top:6px">Los 29 tokens de Figma son los colores y espaciados del CSS del prototipo.</p></div>
+  </div>
+  <style>
+    .fig { border-radius:12px; overflow:hidden; box-shadow:0 12px 34px rgba(16,24,40,.16); border:1px solid #cfd6e2; background:#fff }
+    .fig img { display:block; width:100% }
+    .cap { margin-top:14px; font-size:20px; display:flex; align-items:center; gap:12px; color:var(--muted) }
+    .phone { background:#11182A; border-radius:40px; padding:12px; box-shadow:0 16px 40px rgba(16,24,40,.25) }
+    .phone .scr { border-radius:30px; overflow:hidden; height:560px; background:var(--bg) }
+    .phone img { display:block; width:100% }
+  </style>
+  <div class="foot"><span>figma.com/design/MsFkBeMOaDbf6MVfLvwnOV</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== INTEGRADO DESDE RACK -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">06</span> Integración</div><h2>Funciones traídas de nuestro proyecto Rack · Operación</h2>
+    <p class="lead">Rack es una herramienta para la zona de racks de un almacén. Sus mejores ideas sirven igual para operar un oleoducto en crisis.</p></div>
+  <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:22px">
+    <div class="rk"><span class="rk__from">En Rack</span><b>Mapa de calor por posición</b><span class="rk__arrow">↓</span><span class="rk__to">En Colonial</span><b>Red real de Colonial, tramo por tramo</b><p>Misma escala de 6 niveles, alimentada con datos publicados.</p></div>
+    <div class="rk"><span class="rk__from">En Rack</span><b>Bloqueo de posiciones en rojo</b><span class="rk__arrow">↓</span><span class="rk__to">En Colonial</span><b>Aislamiento automático de tramos y sistemas</b><p>Como el 7 de mayo: al caer su servicio, se detiene solo.</p></div>
+    <div class="rk"><span class="rk__from">En Rack</span><b>Revisión diaria de ubicaciones</b><span class="rk__arrow">↓</span><span class="rk__to">En Colonial</span><b>Rondas con listas citadas</b><p>Cada punto sale de Colonial, CISA o la TSA; OK solo con todos.</p></div>
+    <div class="rk"><span class="rk__from">En Rack</span><b>Bitácora con huella SHA-256</b><span class="rk__arrow">↓</span><span class="rk__to">En Colonial</span><b>Historial encadenado</b><p>Si alguien altera un evento, la cadena se rompe ahí.</p></div>
+  </div>
+  <style>
+    .rk { background:var(--card); border:1px solid var(--border); border-top:8px solid var(--amber); border-radius:18px; padding:26px; display:flex; flex-direction:column; gap:6px }
+    .rk b { font-size:25px; color:var(--navy); line-height:1.25 }
+    .rk__from, .rk__to { font-size:16px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--muted) }
+    .rk__to { color:var(--warn); margin-top:4px }
+    .rk__arrow { font-size:36px; color:#B5BFCE; line-height:1; margin:8px 0 }
+    .rk p { font-size:20px; color:var(--muted); margin-top:auto; padding-top:14px }
+    .scale { margin-top:34px; background:var(--card); border:1px solid var(--border); border-radius:18px; padding:26px 30px }
+    .scale h4 { font-size:24px; color:var(--navy); margin-bottom:16px }
+    .scale__bar { display:grid; grid-template-columns: repeat(6, 1fr); gap:8px }
+    .scale__bar div { border-radius:10px; padding:16px 18px; color:#fff; font-weight:700; font-size:20px }
+    .scale__bar small { display:block; font-weight:500; font-size:16px; opacity:.9; margin-top:4px }
+    .scale p { font-size:19px; color:var(--muted); margin-top:16px }
+  </style>
+  <div class="scale"><h4>Escala de calor compartida con Rack · aquí mide la capacidad nominal que deja de fluir</h4>
+    <div class="scale__bar">
+      <div style="background:#15803d">0<small>fluye</small></div><div style="background:#65a30d">1<small>en recuperación</small></div>
+      <div style="background:#ca8a04">2<small>detenido ≤ 0.6 M b/d</small></div><div style="background:#ea580c">3<small>≤ 0.9 M · L3 y L4</small></div>
+      <div style="background:#d9480f">4<small>≤ 1.2 M · Línea 2</small></div><div style="background:#b91c1c">5<small>≤ 1.5 M · Línea 1</small></div>
+    </div>
+    <p>Capacidades publicadas por McKinsey Energy Insights: Línea 1, 1.5 M barriles/día · Línea 2, 1.2 M · Línea 3, 885 mil · Línea 4, 700 mil. Los ramales no tienen capacidad pública: se muestran rayados como “sin dato público”, sin inventar un número.</p>
+  </div>
+  <div class="foot"><span>Funciones adaptadas de nuestro proyecto Rack · Operación</span><span class="pg"></span></div>
+</section>
+
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">06</span> Mapa de calor</div><h2>La red real de Colonial: dónde se corta el combustible</h2></div>
+  <div style="display:grid; grid-template-columns: 1260px 1fr; gap:44px">
+    <div class="browser" style="align-self:start"><div class="bar"><i></i><i></i><i></i><span>centro-contingencia.onrender.com/#/mapa</span></div>
+      <div class="view" style="height:760px"><img src="capturas-real/r05-red-impacto.png"></div></div>
+    <div style="padding-top:10px"><ul class="dots"><li><b>22 instalaciones</b> del mapa oficial de Colonial, de <b>Houston</b> a <b>Linden</b>, en sus coordenadas reales.</li><li>Líneas 1 a 4 y ramales con <b>diámetro, producto y capacidad publicados</b>.</li><li>Tras D1 = Sí, las 4 líneas quedan detenidas: la Línea 1 en rojo porque mueve <b>1.5 M barriles/día</b>.</li><li>Cada dato muestra su fuente con un clic.</li></ul></div>
+  </div>
+  <div class="foot"><span>Captura real · coordenadas reales, trazado esquemático (el derecho de vía exacto no es público)</span><span class="pg"></span></div>
+</section>
+
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">06</span> Reproducción del caso</div><h2>El caso real, día por día</h2></div>
+  <div style="display:grid; grid-template-columns: 1260px 1fr; gap:44px">
+    <div class="browser" style="align-self:start"><div class="bar"><i></i><i></i><i></i><span>centro-contingencia.onrender.com/#/mapa</span></div>
+      <div class="view" style="height:760px"><img src="capturas-real/r06-caso-10may.png"></div></div>
+    <div style="padding-top:10px"><ul class="dots"><li><b>7 may:</b> a las 6:10 las 5,500 millas estaban detenidas (Blount, Senado).</li><li><b>9 may:</b> algunos laterales operan; las líneas 1 a 4 siguen fuera (S&amp;P).</li><li><b>10 may:</b> la <b>Línea 4</b> opera en <b>control manual</b> (Fox Business).</li><li><b>12–13 may:</b> reinicio por segmentos y entregas en todos los mercados (Colonial).</li></ul></div>
+  </div>
+  <div class="foot"><span>Captura real · reproducción de solo lectura con lo que Colonial y la prensa publicaron</span><span class="pg"></span></div>
+</section>
+
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">06</span> Aislamiento y rondas</div><h2>Nada se reinicia sin verificar</h2></div>
+  <div style="display:grid; grid-template-columns: 1260px 1fr; gap:44px">
+    <div class="browser" style="align-self:start"><div class="bar"><i></i><i></i><i></i><span>centro-contingencia.onrender.com/#/mapa</span></div>
+      <div class="view" style="height:760px"><img src="capturas-real/r08-ronda.png"></div></div>
+    <div style="padding-top:10px"><ul class="dots"><li>Al caer un servicio, sus tramos <b>detienen el bombeo y cierran válvulas</b> solos; los sistemas se desconectan.</li><li>Antes de reiniciar, se confirma cada punto: <b>patrullaje del derecho de vía</b> y <b>lecturas en sitio</b> (como hizo Colonial: 29,000 millas recorridas).</li><li>Sistemas: <b>MFA</b>, perfiles heredados eliminados, parches KEV, respaldo probado (CISA y TSA).</li><li><b>OK</b> solo con todos los puntos; sin OK posterior al aislamiento, se <b>rechaza</b> el reinicio.</li></ul></div>
+  </div>
+  <div class="foot"><span>Captura real · la Línea 1 Atlanta–Greensboro queda “observada”: falta probar la operación manual</span><span class="pg"></span></div>
+</section>
+
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">06</span> Bitácora</div><h2>Una bitácora que delata cualquier alteración</h2></div>
+  <div style="display:grid; grid-template-columns: 1260px 1fr; gap:44px">
+    <div class="browser" style="align-self:start"><div class="bar"><i></i><i></i><i></i><span>centro-contingencia.onrender.com/#/mapa</span></div>
+      <div class="view" style="height:760px"><img src="capturas-real/r11-bitacora.png"></div></div>
+    <div style="padding-top:10px"><ul class="dots"><li>Cada evento guarda la <b>huella SHA-256 del anterior</b>, calculada por un trigger de PostgreSQL.</li><li>Registra cada aislamiento, verificación (con cuántos puntos se confirmaron) y reinicio.</li><li>La verificación recalcula la cadena <b>fuera de la base</b> e indica el primer evento alterado o borrado.</li><li>Alineado con ISO/IEC 27001, control A.8.15 (registro de eventos).</li></ul></div>
+  </div>
+  <div class="foot"><span>Captura real · verificación de integridad</span><span class="pg"></span></div>
+</section>
+
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">06</span> Sustento</div><h2>Cada dato del mapa tiene fuente</h2></div>
+  <div style="display:grid; grid-template-columns: 1260px 1fr; gap:44px">
+    <div class="browser" style="align-self:start"><div class="bar"><i></i><i></i><i></i><span>centro-contingencia.onrender.com/#/mapa</span></div>
+      <div class="view" style="height:760px"><img src="capturas-real/r13-fuentes.png"></div></div>
+    <div style="padding-top:10px"><ul class="dots">
+      <li><b>14 fuentes públicas</b>: Colonial, testimonio en el Senado, CISA/FBI, TSA, McKinsey, S&amp;P, Fox, AOPA, API.</li>
+      <li>La base <b>rechaza</b> una instalación o tramo sin fuente (restricción CHECK).</li>
+      <li>Lo no publicado <b>no se inventa</b>: ruta exacta, capacidad de ramales e inventario de servidores.</li>
+      <li>La pestaña muestra qué sustenta cada fuente y qué datos la citan.</li>
+    </ul></div>
+  </div>
+  <div class="foot"><span>Captura real · pestaña Fuentes del mapa</span><span class="pg"></span></div>
+</section>
+
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">06</span> Analítica</div><h2>Analítica de la respuesta para el comité</h2></div>
+  <div style="display:grid; grid-template-columns: 1260px 1fr; gap:44px">
+    <div class="browser" style="align-self:start"><div class="bar"><i></i><i></i><i></i><span>centro-contingencia.onrender.com/#/analitica</span></div>
+      <div class="view" style="height:760px"><img src="capturas-real/r12-analitica.png"></div></div>
+    <div style="padding-top:10px"><ul class="dots"><li><b>MTTR</b> (tiempo medio de resolución) y <b>MTTC</b> (hasta contener).</li><li>Tiempo por etapa: la más lenta es <b>Erradicación</b>, igual que en el caso real.</li><li>Horas fuera de servicio por activo e incidentes por severidad.</li><li>Los simulacros se excluyen de los tiempos; exportación a CSV.</li></ul></div>
+  </div>
+  <div class="foot"><span>Captura real · con incidentes históricos de prueba</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 26 MEJORAS -->
+<section class="slide">
+  <div class="head"><div class="kicker"><span class="num">06</span> Mejoras</div><h2>Cómo prevenir un incidente similar</h2></div>
+  <div class="grid2" style="gap:36px; flex:1">
+    <div class="card" style="display:flex; flex-direction:column">
+      <h3 style="font-size:32px">Para la organización</h3>
+      <div class="imp">
+        <div><i>🔐</i><p><b>MFA obligatorio</b> en todo acceso remoto y en cuentas privilegiadas.</p></div>
+        <div><i>🧹</i><p><b>Dar de baja las cuentas antiguas</b> y revisar los accesos cada trimestre.</p></div>
+        <div><i>🧱</i><p><b>Segmentar TI y OT</b> para que caiga la facturación sin detener el bombeo.</p></div>
+        <div><i>💾</i><p><b>Respaldos inmutables y fuera de línea</b> (regla 3-2-1), probados en restauraciones reales.</p></div>
+        <div><i>📋</i><p><b>Un plan específico para ransomware</b> con simulacros periódicos.</p></div>
+      </div>
+    </div>
+    <div class="card" style="border:2px solid var(--amber); display:flex; flex-direction:column">
+      <h3 style="font-size:32px">Para el sistema (siguiente versión)</h3>
+      <div class="imp">
+        <div><i>👤</i><p><b>SSO corporativo (OIDC)</b> sobre el MFA que ya tiene, con baja automática de cuentas.</p></div>
+        <div><i>🗂️</i><p><b>Conectar el mapa al SCADA real</b>: presiones y caudales en vivo por tramo.</p></div>
+        <div><i>📡</i><p><b>Integración con SIEM/EDR</b>: que una alerta registre el incidente y marque el activo.</p></div>
+        <div><i>🔔</i><p><b>Alertas automáticas</b> (correo o SMS) al aislar un activo o cambiar de etapa.</p></div>
+        <div><i>⏱️</i><p><b>Metas de RTO y RPO</b> por servicio, comparadas con la analítica.</p></div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <style>
+    .imp { flex:1; display:flex; flex-direction:column; justify-content:space-around; margin-top:16px }
+    .imp > div { display:flex; gap:18px; align-items:flex-start }
+    .imp i { font-style:normal; font-size:36px; width:52px; flex:none; text-align:center }
+    .imp p { font-size:25px; line-height:1.4 }
+  </style>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 27 CONCLUSIONES -->
+<section class="slide" style="background:var(--navy); color:#fff">
+  <div class="head"><div class="kicker" style="color:#B9C6DC">Conclusiones</div><h2 style="color:#fff">Lo que nos deja el caso</h2></div>
+  <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top:20px">
+    <div class="cc"><div class="n">1</div><h3>La causa fue básica</h3><p>Una contraseña sin MFA detuvo infraestructura crítica. La prevención más barata era también la más efectiva.</p></div>
+    <div class="cc"><div class="n">2</div><h3>Decidir rápido exige un plan</h3><p>Sin un plan para ransomware, cada decisión se improvisó. Un flujo con decisiones explícitas reduce el tiempo y el error.</p></div>
+    <div class="cc"><div class="n">3</div><h3>La tecnología ordena la respuesta</h3><p>Nuestro sistema hace cumplir el plan, muestra el estado en tiempo real y deja trazabilidad de cada decisión.</p></div>
+  </div>
+  <div style="margin-top:auto; margin-bottom:20px; border-left:8px solid var(--amber); padding:8px 0 8px 36px">
+    <p style="font-size:42px; font-weight:800; color:#fff; line-height:1.25">Un plan que solo existe en papel se improvisa bajo presión.<br><span style="color:var(--amber)">Un sistema hace que se cumpla.</span></p>
+  </div>
+  <style>
+    .cc { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); border-radius:18px; padding:38px 36px }
+    .cc .n { width:56px; height:56px; border-radius:14px; background:var(--amber); color:var(--navy); display:grid; place-items:center; font-weight:800; font-size:26px }
+    .cc h3 { color:#fff; font-size:34px; margin-top:26px } .cc p { color:#C6D2E6; font-size:26px; margin-top:16px; line-height:1.45 }
+  </style>
+  <div class="foot" style="color:#9FB0CC"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg" style="color:#fff"></span></div>
+</section>
+
+<!-- ============================== 28 FUENTES -->
+<section class="slide">
+  <div class="head"><div class="kicker">Referencias</div><h2>Fuentes consultadas</h2></div>
+  <ol class="src">
+    <li><b>TechTarget.</b> “Colonial Pipeline hack explained: Everything you need to know”. <span>techtarget.com/whatis/feature/Colonial-Pipeline-hack-explained-Everything-you-need-to-know</span></li>
+    <li><b>NBC News</b> (2021, 8 de junio). “Colonial CEO: no ransomware plan in place”. <span>nbcnews.com/tech/security/colonial-ceo-no-ransomware-plan-place-rcna1143</span></li>
+    <li><b>Insurance Journal</b> (2021, 9 de junio). “Hackers only needed a single password to disrupt Colonial Pipeline, CEO testifies”. <span>insurancejournal.com/news/national/2021/06/09/617870.htm</span></li>
+    <li><b>S&amp;P Global Commodity Insights</b> (2021, 7 de junio). “DOJ recovers majority of bitcoin ransom from Colonial Pipeline hack”. <span>spglobal.com/energy/en/news-research/latest-news/natural-gas/060721-doj-recovers-majority-of-bitcoin-ransom-from-colonial-pipeline-hack</span></li>
+    <li><b>CBS News</b> (2021). “Colonial Pipeline CEO defends handling of ransomware attack in Senate testimony”. <span>cbsnews.com/news/colonial-pipeline-ceo-ransomware-hackers-senate-hearing</span></li>
+    <li><b>Colonial Pipeline</b> (2021, 13 de mayo). Restart Supply Update (mapa del sistema) · <b>J. Blount</b>, testimonio ante el Senado (8/6/2021) · <b>CISA/FBI</b> AA21-131A · <b>TSA</b> SD Pipeline-2021-02 · <b>McKinsey</b> Energy Insights · <b>S&amp;P Global</b> (8, 9 y 12/5/2021) · <b>Fox Business</b> (10/5/2021). Enlaces completos en la pestaña Fuentes del sistema.</li>
+    <li><b>Curso Soluciones Tecnológicas 2026-2.</b> Semana 12, Caso 1: Colonial Pipeline (2021).</li>
+  </ol>
+  <style>
+    .src { padding-left:34px; display:grid; gap:14px; margin-top:6px } .src li { font-size:21px }
+    .src span { display:block; font-size:18px; color:var(--navy-3); font-family: ui-monospace, Menlo, monospace; margin-top:4px; word-break:break-all }
+  </style>
+  <div class="foot"><span>Colonial Pipeline 2021 · Plan de contingencia</span><span class="pg"></span></div>
+</section>
+
+<!-- ============================== 29 GRACIAS -->
+<section class="slide" style="background:var(--navy); color:#fff; justify-content:center; align-items:center; text-align:center">
+  <div style="width:84px;height:84px;border-radius:20px;background:linear-gradient(135deg,#F4C150,#E59A2B)"></div>
+  <h1 style="color:#fff; margin-top:44px; font-size:120px">¡Gracias!</h1>
+  <p style="font-size:36px; color:#F4C150; font-weight:700; margin-top:18px">¿Preguntas?</p>
+  <p style="font-size:26px; color:#C6D2E6; margin-top:40px">Ahora: demostración en vivo del prototipo</p>
+</section>
+
+<script>
+/* ---------- Diagrama de flujo ---------- */
+(function () {
+  const root = document.getElementById('flow');
+  const W = 1728, H = 830;
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('width', W); svg.setAttribute('height', H);
+  svg.style.position = 'absolute'; svg.style.inset = '0'; svg.style.overflow = 'visible';
+  svg.innerHTML = `<defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#52617A"/></marker>
+    <marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#C93C3C"/></marker></defs>`;
+  root.appendChild(svg);
+
+  const A = 200, B = 620;               // centros de fila
+  const BOX_H = 96, DW = 200, DH = 140; // caja y rombo
+  const nodes = {};
+  const box = (id, cx, cy, w, h, cls, title, sub) => {
+    const el = document.createElement('div');
+    el.className = 'fn ' + cls;
+    Object.assign(el.style, { left: cx - w / 2 + 'px', top: cy - h / 2 + 'px', width: w + 'px', height: h + 'px' });
+    el.innerHTML = `<b>${title}</b>${sub ? `<span>${sub}</span>` : ''}`;
+    root.appendChild(el);
+    nodes[id] = { cx, cy, w, h, l: cx - w / 2, r: cx + w / 2, t: cy - h / 2, b: cy + h / 2 };
+  };
+  const diamond = (id, cx, cy, title, sub) => {
+    const p = document.createElementNS(svgNS, 'polygon');
+    p.setAttribute('points', `${cx},${cy - DH / 2} ${cx + DW / 2},${cy} ${cx},${cy + DH / 2} ${cx - DW / 2},${cy}`);
+    p.setAttribute('fill', '#F4C150'); p.setAttribute('stroke', '#E0A93A'); p.setAttribute('stroke-width', '2');
+    svg.appendChild(p);
+    const t = document.createElement('div');
+    t.className = 'dtext';
+    Object.assign(t.style, { left: cx - 70 + 'px', top: cy - 46 + 'px', width: '140px', height: '92px' });
+    t.innerHTML = `<b>${title}</b><span>${sub}</span>`;
+    root.appendChild(t);
+    nodes[id] = { cx, cy, l: cx - DW / 2, r: cx + DW / 2, t: cy - DH / 2, b: cy + DH / 2 };
+  };
+  const line = (pts, { red = false, dash = false, arrow = true } = {}) => {
+    const pl = document.createElementNS(svgNS, 'polyline');
+    pl.setAttribute('points', pts.map((p) => p.join(',')).join(' '));
+    pl.setAttribute('fill', 'none');
+    pl.setAttribute('stroke', red ? '#C93C3C' : '#52617A');
+    pl.setAttribute('stroke-width', '2.5');
+    if (dash) pl.setAttribute('stroke-dasharray', '9 7');
+    if (arrow) pl.setAttribute('marker-end', `url(#${red ? 'ahr' : 'ah'})`);
+    svg.appendChild(pl);
+  };
+  const label = (x, y, text, color) => {
+    const el = document.createElement('div');
+    el.className = 'lbl'; el.textContent = text; el.style.color = color;
+    el.style.left = x + 'px'; el.style.top = y + 'px';
+    root.appendChild(el);
+  };
+  const GREEN = '#2F8A57', RED = '#C93C3C';
+
+  // ---- Fila A
+  box('ini', 75, A, 150, 76, 'term', 'INICIO', '<span style="color:#C6D2E6">Operación normal</span>');
+  box('det', 290, A, 200, BOX_H, 'inc', 'DETECCIÓN', 'Nota de rescate y actividad anómala en TI');
+  box('eva', 530, A, 200, BOX_H, '', 'EVALUACIÓN', 'Alcance, sistemas afectados y riesgo OT');
+  diamond('d1', 790, A, 'DECISIÓN 1', '¿El ataque puede llegar a OT?');
+  box('d1s', 960, 52, 250, 64, 'inc chipn', '', 'Detener el oleoducto y aislar TI&nbsp;/&nbsp;OT');
+  box('d1n', 960, 348, 250, 64, 'chipn', '', 'Monitoreo reforzado; contener solo TI');
+  box('con', 1180, A, 210, BOX_H, '', 'CONTENCIÓN', 'Desconectar, bloquear accesos, avisar a FBI y CISA');
+  diamond('d2', 1430, A, 'DECISIÓN 2', '¿Respaldos limpios y verificados?');
+  box('d2s', 1590, 52, 220, 64, 'rec chipn', '', 'Restaurar desde respaldos');
+  box('d2n', 1590, 348, 220, 64, 'chipn', '', 'Evaluar rescate y descifrado con legal');
+
+  // ---- Fila B
+  box('err', 150, B, 210, BOX_H, '', 'ERRADICACIÓN', 'Eliminar malware, rotar claves, cerrar VPN sin MFA');
+  diamond('d3', 420, B, 'DECISIÓN 3', '¿Sistemas seguros para reiniciar?');
+  box('for', 420, 780, 240, 64, 'inc chipn', '', 'Análisis forense y corrección');
+  box('rec', 700, B, 210, BOX_H, 'rec', 'RECUPERACIÓN', 'Reinicio manual y gradual por tramos');
+  diamond('d4', 960, B, 'DECISIÓN 4', '¿Riesgo de desabastecimiento?');
+  box('alt', 1240, 492, 250, 64, 'chipn alt', '', '<b style="font-size:14px;color:#3B5A8C">RUTA ALTERNATIVA</b><br>Camiones, gobierno, comunicación');
+  box('srv', 1240, B, 210, BOX_H, 'rec', 'SERVICIO RESTABLECIDO', 'Entregas normalizadas');
+  box('cie', 1490, B, 190, BOX_H, 'rec', 'CIERRE', 'Lecciones aprendidas e informe');
+  box('fin', 1665, B, 110, 76, 'term', 'FIN', '');
+
+  const n = nodes;
+  // Flechas fila A
+  line([[n.ini.r, A], [n.det.l, A]]);
+  line([[n.det.r, A], [n.eva.l, A]]);
+  line([[n.eva.r, A], [n.d1.l, A]]);
+  line([[790, n.d1.t], [790, 52], [n.d1s.l, 52]]); label(800, 70, 'Sí', GREEN);
+  line([[790, n.d1.b], [790, 348], [n.d1n.l, 348]]); label(800, 290, 'No', RED);
+  line([[n.d1s.r, 52], [1180, 52], [1180, n.con.t]]);
+  line([[n.d1n.r, 348], [1180, 348], [1180, n.con.b]]);
+  line([[n.con.r, A], [n.d2.l, A]]);
+  line([[1430, n.d2.t], [1430, 52], [n.d2s.l, 52]]); label(1440, 70, 'Sí', GREEN);
+  line([[1430, n.d2.b], [1430, 348], [n.d2n.l, 348]]); label(1440, 290, 'No', RED);
+  // Ambas ramas de D2 convergen y bajan a la fila B
+  line([[n.d2s.r, 52], [1716, 52], [1716, 420]], { arrow: false });
+  line([[n.d2n.r, 348], [1716, 348]], { arrow: false });
+  line([[1716, 420], [150, 420], [150, n.err.t]]);
+
+  // Flechas fila B
+  line([[n.err.r, B], [n.d3.l, B]]);
+  line([[n.d3.r, B], [n.rec.l, B]]); label(534, B - 34, 'Sí', GREEN);
+  line([[420, n.d3.b], [420, n.for.t]]); label(432, 700, 'No', RED);
+  line([[n.for.l, 780], [150, 780], [150, n.err.b]], { red: true, dash: true });
+  label(170, 744, 'Reintentar', RED);
+  line([[n.rec.r, B], [n.d4.l, B]]);
+  line([[n.d4.r, B], [n.srv.l, B]]); label(1072, B + 8, 'No', RED);
+  line([[960, n.d4.t], [960, 492], [n.alt.l, 492]]); label(972, 500, 'Sí', GREEN);
+  line([[1240, n.alt.b], [1240, n.srv.t]]);
+  line([[n.srv.r, B], [n.cie.l, B]]);
+  line([[n.cie.r, B], [n.fin.l, B]]);
+})();
+
+</script>
+<script>
+  document.querySelectorAll('.slide').forEach((slide, i) => { const pg = slide.querySelector('.pg'); if (pg) pg.textContent = i + 1; });
+</script>
+</body>
+</html>

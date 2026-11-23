@@ -63,7 +63,42 @@ export const EVENT_LABELS = {
   incidente_cerrado: 'Incidente cerrado',
   evidencia_registrada: 'Evidencia registrada',
   evidencia_anulada: 'Evidencia anulada',
+  activo_aislado: 'Elemento aislado',
+  activo_liberado: 'Elemento reconectado',
+  ronda_iniciada: 'Ronda de verificación iniciada',
+  verificacion_activo: 'Elemento verificado',
+  ronda_cerrada: 'Ronda de verificación cerrada',
 };
+
+/** Mismos criterios que el servidor (domain/permissions.js): coordinador o el rol dueño de la red. */
+export function canOperateAsset(user, asset) {
+  if (!user || !asset) return false;
+  return user.rol === 'coordinador' || (user.rol === 'analista_ti' && asset.red === 'TI') || (user.rol === 'operador_ot' && asset.red === 'OT');
+}
+
+export const canStartRound = (user) => ['coordinador', 'analista_ti', 'operador_ot'].includes(user?.rol);
+
+export const VERIFICATION_LABELS = { ok: 'OK', observado: 'Observado', falla: 'Falla' };
+
+export const LOCATION_TYPE_LABELS = {
+  origen: 'Origen del sistema',
+  punto_entrega: 'Mercado de entrega',
+  patio_tanques: 'Patio de tanques',
+  estacion: 'Estación de bombeo',
+  derivacion: 'Derivación de ramales',
+  terminal: 'Fin del sistema',
+};
+
+export const ELEMENT_STATE_LABELS = {
+  operativo: 'Fluye con normalidad',
+  en_recuperacion: 'En recuperación',
+  afectado: 'Servicio afectado',
+  aislado: 'Aislado',
+};
+
+export const LINE_LABELS = { L1: 'Línea 1', L2: 'Línea 2', L3: 'Línea 3', L4: 'Línea 4', LAT: 'Ramales' };
+
+export const formatBarrels = (bpd) => (bpd ? `${(bpd / 1_000_000).toLocaleString('es-PE', { maximumFractionDigits: 2 })} M barriles/día` : 'Sin dato público');
 
 export function canChangeService(user, service) {
   if (!user) return false;

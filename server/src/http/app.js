@@ -40,6 +40,9 @@ import {
   listIncidents,
 } from '../services/incidentService.js';
 import { getContingencyPlan } from '../services/planService.js';
+import { getAsset, getPipelineMap, isolateAsset, releaseAsset } from '../services/assetService.js';
+import { listLedger, verifyLedger } from '../services/ledgerService.js';
+import { closeRound, getRound, listRounds, recordCheck, startRound } from '../services/roundService.js';
 import { changeServiceStatus, getDashboard, listServices } from '../services/serviceStatusService.js';
 import { listUsers } from '../services/userService.js';
 import { createStorage } from '../storage/index.js';
@@ -53,12 +56,18 @@ import {
   disableMfaSchema,
   evidenceLibraryQuerySchema,
   idParamSchema,
+  isolateAssetSchema,
+  ledgerQuerySchema,
   listIncidentsQuerySchema,
   loginSchema,
   mfaCodeSchema,
   mfaLoginSchema,
   parse,
+  recordCheckSchema,
+  releaseAssetSchema,
+  roundItemParamsSchema,
   serviceStatusSchema,
+  startRoundSchema,
   updateActionSchema,
   uploadEvidenceSchema,
   voidEvidenceSchema,
@@ -209,6 +218,50 @@ function evidenceRoutes(db, config, storage) {
   return router;
 }
 
+/** Mapa de calor de la red, aislamiento de tramos y sistemas, rondas y bitácora encadenada. */
+function mapRoutes(db) {
+  const router = express.Router();
+
+  router.get('/mapas/oleoducto', async (_req, res) => res.json(await getPipelineMap(db)));
+
+  router.get('/activos/:id', async (req, res) => {
+    const { id } = parse(idParamSchema, req.params);
+    res.json(await getAsset(db, id));
+  });
+  router.post('/activos/:id/aislar', async (req, res) => {
+    const { id } = parse(idParamSchema, req.params);
+    res.json(await isolateAsset(db, id, parse(isolateAssetSchema, req.body), req.user));
+  });
+  router.post('/activos/:id/liberar', async (req, res) => {
+    const { id } = parse(idParamSchema, req.params);
+    res.json(await releaseAsset(db, id, parse(releaseAssetSchema, req.body), req.user));
+  });
+
+  router.get('/rondas', async (_req, res) => res.json(await listRounds(db)));
+  router.post('/rondas', async (req, res) => {
+    res.status(201).json(await startRound(db, parse(startRoundSchema, req.body), req.user));
+  });
+  router.get('/rondas/:id', async (req, res) => {
+    const { id } = parse(idParamSchema, req.params);
+    res.json(await getRound(db, id));
+  });
+  router.patch('/rondas/:id/activos/:activoId', async (req, res) => {
+    const { id, activoId } = parse(roundItemParamsSchema, req.params);
+    res.json(await recordCheck(db, id, activoId, parse(recordCheckSchema, req.body), req.user));
+  });
+  router.post('/rondas/:id/cerrar', async (req, res) => {
+    const { id } = parse(idParamSchema, req.params);
+    res.json(await closeRound(db, id, req.user));
+  });
+
+  router.get('/bitacora', async (req, res) => {
+    const { limite } = parse(ledgerQuerySchema, req.query);
+    res.json(await listLedger(db, limite));
+  });
+  router.get('/bitacora/verificar', async (_req, res) => res.json(await verifyLedger(db)));
+  return router;
+}
+
 export function createApp(db, config) {
   const app = express();
   const sessions = createSessionManager(config);
@@ -278,6 +331,7 @@ export function createApp(db, config) {
   });
 
   api.use(evidenceRoutes(db, config, storage));
+  api.use(mapRoutes(db));
 
   api.get('/analitica', async (req, res) => {
     res.json(await getAnalytics(db, { includeSecurity: req.user.rol === 'coordinador' }));

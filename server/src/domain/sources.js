@@ -1,0 +1,121 @@
+/**
+ * Fuentes públicas que sustentan cada dato del mapa de la red, de los checklists y de la
+ * reproducción del caso. Cada instalación, tramo, sistema y punto de verificación guarda
+ * las claves de las fuentes que lo respaldan; la interfaz las muestra junto al dato.
+ */
+export const SOURCES = Object.freeze({
+  colmap0513: {
+    corto: 'Colonial, mapa 13/5/2021',
+    titulo: 'Colonial Restart Supply Update (mapa del sistema)',
+    editor: 'Colonial Pipeline Company',
+    fecha: '2021-05-13',
+    url: 'https://colpipe.s3-us-west-1.amazonaws.com/media/CPC-SYSTEM-MAP_Restart-5.13.21_v2.pdf',
+    sustenta: 'Líneas 1 a 4, los mercados de entrega del mapa oficial y que el sistema termina en Linden, NJ.',
+  },
+  mckinsey: {
+    corto: 'McKinsey Energy Insights',
+    titulo: 'Colonial pipeline · Refinery Reference Desk',
+    editor: 'McKinsey Energy Insights',
+    fecha: null,
+    url: 'https://www.mckinseyenergyinsights.com/resources/refinery-reference-desk/colonial-pipeline/',
+    sustenta: 'Recorrido, diámetro, producto y capacidad nominal de cada línea; ramales Atlanta–Tennessee, Atlanta–sur de Georgia, Greensboro–Raleigh/Durham y Mitchell–Richmond/Norfolk.',
+  },
+  wikipedia: {
+    corto: 'Wikipedia',
+    titulo: 'Colonial Pipeline',
+    editor: 'Wikipedia',
+    fecha: null,
+    url: 'https://en.wikipedia.org/wiki/Colonial_Pipeline',
+    sustenta: 'Origen en Houston, más de 5,500 millas, Greensboro como patio de tanques más grande, patio de tanques Linden Junction y estación de bombeo Dorsey Junction.',
+  },
+  blount: {
+    corto: 'Blount, Senado 8/6/2021',
+    titulo: 'Testimonio de Joseph Blount ante el Comité de Seguridad Nacional del Senado',
+    editor: 'U.S. Senate HSGAC',
+    fecha: '2021-06-08',
+    url: 'https://www.hsgac.senate.gov/imo/media/doc/Testimony-Blount-2021-06-08.pdf',
+    sustenta: 'Detección antes de las 5:00 del 7 de mayo, paro total a las 6:10 para que el malware no llegara a OT, orden de paro del centro de control, perfil VPN heredado, operación manual, lecturas manuales y 29,000 millas recorridas inspeccionando.',
+  },
+  insjournal: {
+    corto: 'Insurance Journal 9/6/2021',
+    titulo: 'Hackers Only Needed a Single Password to Disrupt Colonial Pipeline, CEO Testifies',
+    editor: 'Insurance Journal (Bloomberg)',
+    fecha: '2021-06-09',
+    url: 'https://www.insurancejournal.com/news/national/2021/06/09/617870.htm',
+    sustenta: 'La VPN heredada no tenía autenticación multifactor; Blount: “solo tenía autenticación de un factor”. Bastó una contraseña robada.',
+  },
+  spg0508: {
+    corto: 'S&P Global 8/5/2021',
+    titulo: 'Colonial Pipeline confirms cybersecurity attack, temporarily halts operations',
+    editor: 'S&P Global Platts',
+    fecha: '2021-05-08',
+    url: 'https://www.spglobal.com/platts/en/market-insights/latest-news/oil/050821-colonial-pipeline-confirms-cybersecurity-attack-temporarily-halts-operations',
+    sustenta: 'Colonial desconectó sistemas de forma proactiva para contener la amenaza, lo que detuvo todas las operaciones y afectó sistemas TI.',
+  },
+  spg0509: {
+    corto: 'S&P Global 9/5/2021',
+    titulo: 'Some Colonial Pipeline laterals open, but mainlines remain down',
+    editor: 'S&P Global Platts',
+    fecha: '2021-05-09',
+    url: 'https://www.spglobal.com/commodityinsights/en/market-insights/latest-news/oil/050921-some-colonial-pipeline-laterals-open-but-mainlines-remain-down',
+    sustenta: 'El 9 de mayo operaban algunos laterales entre terminales y puntos de entrega; las líneas 1, 2, 3 y 4 seguían fuera de servicio.',
+  },
+  fox0510: {
+    corto: 'Fox Business 10/5/2021',
+    titulo: 'Colonial Pipeline temporarily resumes Line 4 operations',
+    editor: 'Fox Business',
+    fecha: '2021-05-10',
+    url: 'https://foxbusiness.com/technology/colonial-pipeline-temporarily-resumes-line-4-operations-following-ransomware-attack',
+    sustenta: 'La Línea 4, de Greensboro a Woodbine (MD), operó bajo control manual con el inventario existente.',
+  },
+  spg0512: {
+    corto: 'S&P Global 12/5/2021',
+    titulo: 'Colonial Pipeline begins restart process that will take several days',
+    editor: 'S&P Global',
+    fecha: '2021-05-12',
+    url: 'https://www.spglobal.com/energy/en/news-research/latest-news/crude-oil/051221-colonial-pipeline-begins-restart-process-that-will-take-several-days',
+    sustenta: 'Reinicio a partir de la tarde del 12 de mayo, un segmento a la vez; el paro cortó más de 100 millones de galones al día.',
+  },
+  aopa: {
+    corto: 'AOPA 13/5/2021',
+    titulo: 'Pipeline aerial patrols stepped up as fuel crisis eases',
+    editor: 'AOPA',
+    fecha: '2021-05-13',
+    url: 'https://www.aopa.org/news-and-media/all-news/2021/may/13/pipeline-aerial-patrols-stepped-up-as-fuel-crisis-eases',
+    sustenta: 'Colonial aumentó los patrullajes aéreos del derecho de vía y desplegó más de 50 personas para inspeccionarlo a diario.',
+  },
+  techtarget: {
+    corto: 'TechTarget',
+    titulo: 'Colonial Pipeline hack explained: Everything you need to know',
+    editor: 'TechTarget',
+    fecha: '2022-04-26',
+    url: 'https://www.techtarget.com/whatis/feature/Colonial-Pipeline-hack-explained-Everything-you-need-to-know',
+    sustenta: 'El ransomware afectó sistemas TI como facturación y contabilidad; se robaron 100 GB en dos horas; los sistemas OT que mueven el combustible no fueron comprometidos directamente.',
+  },
+  cisa: {
+    corto: 'CISA/FBI AA21-131A',
+    titulo: 'AA21-131A · DarkSide Ransomware: Best Practices for Preventing Business Disruption',
+    editor: 'CISA y FBI',
+    fecha: '2021-05-11',
+    url: 'https://www.cisa.gov/sites/default/files/publications/AA21-131A_Darkside_Ransomware.pdf',
+    sustenta: 'Segmentación TI/OT con DMZ, protocolos industriales fuera de la red TI, controles manuales probados, respaldos aislados y probados, imágenes doradas y MFA para el acceso remoto.',
+  },
+  tsa: {
+    corto: 'TSA SD Pipeline-2021-02',
+    titulo: 'TSA Security Directive Pipeline-2021-02 (resumen de la versión 02D)',
+    editor: 'Industrial Cyber',
+    fecha: '2023-07-27',
+    url: 'https://industrialcyber.co/transport/network-segmentation-mfa-among-cybersecurity-measures-laid-down-in-tsa-security-directive-for-pipeline-operators/',
+    sustenta: 'Directiva obligatoria para oleoductos tras Colonial: segmentación TI/OT, MFA, mínimo privilegio y menos cuentas compartidas, parches críticos priorizando el catálogo KEV y plan de respuesta con respaldos protegidos.',
+  },
+  api1130: {
+    corto: 'API RP 1130',
+    titulo: 'API RP 1130 · Computational Pipeline Monitoring for Liquids',
+    editor: 'American Petroleum Institute',
+    fecha: null,
+    url: 'https://www.api.org/products-and-services/standards/important-standards-announcements/rp1130',
+    sustenta: 'Práctica recomendada de detección de fugas por monitoreo computacional en oleoductos de líquidos.',
+  },
+});
+
+export const SOURCE_KEYS = Object.freeze(Object.keys(SOURCES));

@@ -3,8 +3,9 @@
 Sistema web para gestionar la respuesta a un ataque de ransomware sobre infraestructura
 crítica. Convierte el plan de contingencia en una máquina de estados (etapas, decisiones
 D1–D4, ruta alternativa y reintento) y lo acompaña con un panel de servicios,
-**evidencias multimedia con cadena de custodia**, **seguridad con MFA** y **analítica de la
-respuesta**. Está listo para desplegarse en la nube (Render).
+**evidencias multimedia con cadena de custodia**, **seguridad con MFA**, **analítica de la
+respuesta** y un **mapa de calor de la red real del oleoducto** (funciones adaptadas del
+proyecto [Rack · Operación](https://github.com/Aldoyzx/rack-operacion)). Está listo para desplegarse en la nube (Render).
 
 | Capa | Tecnología |
 |---|---|
@@ -14,7 +15,10 @@ respuesta**. Está listo para desplegarse en la nube (Render).
 | Base de datos | PostgreSQL 16 (driver `pg`) |
 | Seguridad | scrypt, sesión firmada HS256 en cookie httpOnly, TOTP (RFC 6238), AES-256-GCM |
 | Nube | Render (Blueprint `render.yaml`) · guía en [DESPLIEGUE.md](DESPLIEGUE.md) |
-| Calidad | 56 pruebas automatizadas (`node:test`) · GitHub Actions |
+| Calidad | 73 pruebas automatizadas (`node:test`) · GitHub Actions |
+
+
+> **Entregables de la actividad** (ficha, diagrama, presentación, guion, Figma): ver [`entrega/`](entrega/README.md).
 
 ## Módulos
 
@@ -22,6 +26,11 @@ respuesta**. Está listo para desplegarse en la nube (Render).
 |---|---|
 | Acceso | Contraseña + código MFA, bloqueo tras 5 intentos, límite por IP |
 | Panel | Estado de los 10 servicios TI/OT, incidentes abiertos y eventos (se actualiza cada 10 s) |
+| Mapa de calor | Red de Colonial de Houston a Linden: 22 instalaciones del mapa oficial en sus coordenadas, líneas 1–4 y ramales. Escala de calor de Rack alimentada con la capacidad nominal publicada de cada tramo detenido; capas de impacto, estado y verificación; reproducción día a día del 7 al 13 de mayo de 2021 |
+| Aislamiento | Al caer un servicio, sus tramos (bombeo detenido, válvulas cerradas) y sistemas se aíslan solos, como el paro del 7 de mayo; aislamiento manual por rol; no se reinicia sin una verificación OK posterior |
+| Rondas | Lista de verificación con fuente por tipo (tramo, sistema TI, sistema OT); un OK exige confirmar todos los puntos; cierre solo con todo verificado |
+| Fuentes | Cada instalación, tramo, sistema, punto de verificación y día del caso cita su fuente pública (Colonial, Senado, CISA/FBI, TSA, McKinsey, S&P…) |
+| Bitácora | Historial encadenado con SHA-256 y verificación de integridad recalculada fuera de la base |
 | Incidentes | Registro (real o simulacro), flujo D1–D4, acciones por responsable, bitácora |
 | Evidencias | Carga con arrastrar y soltar, visor (imagen, PDF, video, audio, registros), huella SHA-256, verificación de integridad, anulación con motivo y biblioteca |
 | Plan | Procedimiento, responsable y recursos tecnológicos de cada etapa |
@@ -51,7 +60,7 @@ Cuentas de demostración (contraseña `Colonial2021!`; cámbienla en "Mi cuenta"
 
 | Comando (en `server/`) | Qué hace |
 |---|---|
-| `npm test` | 56 pruebas contra la base `contingencia_test` |
+| `npm test` | 73 pruebas contra la base `contingencia_test` |
 | `npm run db:demo` | Recrea la base con datos iniciales e incidentes históricos (2021–2026) |
 | `npm run db:reset` | Recrea la base solo con los datos iniciales |
 | `npm run simulacro` | Ejecuta un simulacro completo y escribe el informe en `docs/evidencias/` |
@@ -83,6 +92,7 @@ Cuentas de demostración (contraseña `Colonial2021!`; cámbienla en "Mi cuenta"
 | `03_verificacion.sql` | Consultas de verificación de la estructura |
 | `04_datos_prueba.sql` | 7 incidentes históricos (2021–2026), incluidos 2 simulacros |
 | `05_…` · `06_migracion_entrega_final.sql` | Migraciones para bases creadas con versiones anteriores (se aplican solas) |
+| `07_migracion_mapas.sql` | Instalaciones, tramos y sistemas con sus fuentes, rondas de verificación y bitácora encadenada (se aplica en cada arranque; encadena los eventos existentes) |
 
 Diagrama entidad-relación: `docs/der/DER.png`.
 
@@ -95,7 +105,11 @@ Diagrama entidad-relación: `docs/der/DER.png`.
 - **CSRF:** cookie `SameSite=Strict` y cabecera `X-Requested-With` obligatoria en las modificaciones.
 - **Autorización por rol** en el servidor (decisiones, acciones, servicios TI/OT, evidencias y bitácora de seguridad).
 - **Archivos:** tipo validado por su firma binaria (no por la extensión), sin SVG ni HTML, `nosniff`, CSP `sandbox` y descarga con nombre saneado.
-- **Auditoría:** `historial_recuperacion` y `eventos_seguridad` son de solo inserción (triggers).
+- **Auditoría:** `historial_recuperacion` y `eventos_seguridad` son de solo inserción (triggers). Además, cada evento del historial guarda la huella SHA-256 del anterior (ISO/IEC 27001 A.8.15): cambiar o borrar uno, incluso desde la base, rompe la cadena y `GET /api/bitacora/verificar` indica dónde.
+
+### Datos de referencia
+
+Datos de la red: solo lo publicado. Instalaciones y líneas del mapa oficial de reinicio de Colonial (13 may 2021); capacidad, diámetro y producto de cada línea de McKinsey Energy Insights; cronología del testimonio de Joseph Blount ante el Senado y de S&P Global / Fox Business; listas de verificación de la alerta AA21-131A de CISA/FBI y de la directiva TSA Pipeline-2021-02. Las coordenadas son las del centro de cada ciudad y el trazado entre ellas es esquemático; la capacidad de los ramales no es pública y se muestra como "sin dato público". El detalle está en `server/src/domain/sources.js` y en la pestaña Fuentes del mapa.
 - helmet (CSP, HSTS, X-Frame-Options), consultas parametrizadas y validación con zod en cada entrada.
 
 ## API (resumen)
@@ -106,6 +120,9 @@ Diagrama entidad-relación: `docs/der/DER.png`.
 | Operación | `GET /api/dashboard`, `/servicios`, `/plan`, `/incidentes[/:id]` · `POST /incidentes`, `/:id/avanzar`, `/:id/decisiones`, `/:id/acciones` · `PATCH /acciones/:id`, `/servicios/:id/estado` |
 | Evidencias | `GET/POST /api/incidentes/:id/evidencias` · `GET /evidencias`, `/evidencias/:id/contenido`, `/evidencias/:id/verificar` · `POST /evidencias/:id/anular` |
 | Analítica | `GET /api/analitica`, `/analitica/incidentes.csv`, `/seguridad/eventos` (coordinador) |
+| Mapa y elementos | `GET /api/mapas/oleoducto`, `/activos/:id` · `POST /activos/:id/aislar`, `/activos/:id/liberar` |
+| Rondas | `GET/POST /api/rondas` · `GET /rondas/:id` · `PATCH /rondas/:id/activos/:activoId` · `POST /rondas/:id/cerrar` |
+| Bitácora | `GET /api/bitacora`, `/bitacora/verificar` |
 | Salud | `GET /api/health` (base de datos y almacenamiento) |
 
 Errores: `{ error: { code, message, details? } }` con 400, 401, 403, 404, 409, 413 y 429.

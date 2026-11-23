@@ -98,4 +98,17 @@ export const api = {
 
   // analítica
   analytics: () => request('/analitica'),
+
+  // mapas de calor, aislamiento, rondas y bitácora
+  pipelineMap: () => request('/mapas/oleoducto'),
+  asset: (id) => request(`/activos/${id}`),
+  isolateAsset: (id, motivo) => request(`/activos/${id}/aislar`, { method: 'POST', body: { motivo } }),
+  releaseAsset: (id, nota) => request(`/activos/${id}/liberar`, { method: 'POST', body: nota ? { nota } : {} }),
+  rounds: () => request('/rondas'),
+  round: (id) => request(`/rondas/${id}`),
+  startRound: (data) => request('/rondas', { method: 'POST', body: data }),
+  recordCheck: (roundId, assetId, data) => request(`/rondas/${roundId}/activos/${assetId}`, { method: 'PATCH', body: data }),
+  closeRound: (id) => request(`/rondas/${id}/cerrar`, { method: 'POST' }),
+  ledger: (limite = 15) => request(`/bitacora?limite=${limite}`),
+  verifyLedger: () => request('/bitacora/verificar'),
 };

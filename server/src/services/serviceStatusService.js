@@ -1,5 +1,6 @@
 import { BusinessRuleError, NotFoundError } from '../domain/errors.js';
 import { assertCanChangeService } from '../domain/permissions.js';
+import { isolateElementsOfService } from './assetService.js';
 import { listRecentEvents, recordHistory } from './historyService.js';
 
 export const SERVICE_STATES = Object.freeze(['operativo', 'afectado', 'en_recuperacion']);
@@ -46,6 +47,9 @@ export async function applyServiceStatus(db, service, nuevoEstado, { nota = null
     detalle: nota,
     usuarioId,
   });
+  if (nuevoEstado === 'afectado' && service.estado !== 'afectado') {
+    await isolateElementsOfService(db, service, { usuarioId, incidenteId });
+  }
   return true;
 }
 

@@ -5,6 +5,7 @@ import { ErrorBanner, Loading } from './components/common.jsx';
 import Account from './components/Account.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import EvidenceLibrary from './components/EvidenceLibrary.jsx';
+import HeatMaps from './components/heatmaps/HeatMaps.jsx';
 import IncidentDetail from './components/IncidentDetail.jsx';
 import IncidentForm from './components/IncidentForm.jsx';
 import IncidentList from './components/IncidentList.jsx';
@@ -16,6 +17,7 @@ const Analytics = lazy(() => import('./components/Analytics.jsx'));
 
 const NAV = [
   { key: 'panel', label: 'Panel' },
+  { key: 'mapa', label: 'Mapa de calor' },
   { key: 'incidentes', label: 'Incidentes' },
   { key: 'nuevo', label: 'Registrar' },
   { key: 'plan', label: 'Plan' },
@@ -143,6 +145,7 @@ export default function App() {
             {effectiveView.name === 'panel' && <Dashboard user={currentUser} onOpenIncident={openIncident} />}
             {effectiveView.name === 'incidentes' && <IncidentList onOpen={openIncident} />}
             {effectiveView.name === 'nuevo' && users.length > 0 && <IncidentForm users={users} currentUser={currentUser} onCreated={openIncident} />}
+            {effectiveView.name === 'mapa' && <HeatMaps user={currentUser} onOpenIncident={openIncident} />}
             {effectiveView.name === 'plan' && <PlanView />}
             {effectiveView.name === 'evidencias' && <EvidenceLibrary user={currentUser} onOpenIncident={openIncident} />}
             {effectiveView.name === 'analitica' && <Suspense fallback={<Loading label="Cargando gráficos…" />}><Analytics user={currentUser} /></Suspense>}

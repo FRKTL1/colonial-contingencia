@@ -87,6 +87,48 @@ export const contentQuerySchema = z.object({
   descargar: z.enum(['1', '0']).optional(),
 });
 
+export const isolateAssetSchema = z.object({
+  motivo: z.string().trim().min(10, 'Explica el motivo en al menos 10 caracteres').max(300),
+});
+
+export const releaseAssetSchema = z.object({
+  nota: z.string().trim().max(300).optional().transform((v) => v || undefined),
+});
+
+export const startRoundSchema = z
+  .object({
+    alcance: z.enum(['aislados', 'linea', 'servicio']),
+    valor: z.string().trim().toUpperCase().max(16).optional().transform((v) => v || undefined),
+    incidenteId: positiveId.optional(),
+  })
+  .superRefine((data, ctx) => {
+    const formats = { linea: /^(L[1-4]|LAT)$/, servicio: /^(TI|OT)-[A-Z0-9]+$/ };
+    if (data.alcance === 'aislados') {
+      if (data.valor) ctx.addIssue({ code: 'custom', path: ['valor'], message: 'La ronda de aislados no lleva valor' });
+      return;
+    }
+    if (!data.valor || !formats[data.alcance].test(data.valor)) {
+      ctx.addIssue({ code: 'custom', path: ['valor'], message: data.alcance === 'linea' ? 'Indica la línea: L1, L2, L3, L4 o LAT' : 'Indica el servicio, por ejemplo TI-VPN' });
+    }
+  });
+
+export const roundItemParamsSchema = z.object({ id: positiveId, activoId: positiveId });
+
+export const recordCheckSchema = z
+  .object({
+    resultado: z.enum(['ok', 'observado', 'falla']),
+    nota: z.string().trim().max(500).optional().transform((v) => v || undefined),
+    confirmados: z.array(z.number().int().min(0).max(19)).max(20).optional().default([]),
+  })
+  .refine((data) => data.resultado === 'ok' || (data.nota?.length ?? 0) >= 5, {
+    path: ['nota'],
+    message: 'Describe lo observado o la falla (mínimo 5 caracteres)',
+  });
+
+export const ledgerQuerySchema = z.object({
+  limite: z.coerce.number().int().min(1).max(100).optional().default(15),
+});
+
 export function parse(schema, data) {
   const result = schema.safeParse(data ?? {});
   if (!result.success) {

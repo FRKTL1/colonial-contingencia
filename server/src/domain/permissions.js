@@ -38,3 +38,21 @@ export function assertCanChangeService(user, service) {
     throw new ForbiddenError(`El rol ${user.rol} no puede cambiar el estado de servicios ${service.tipo}`);
   }
 }
+
+/** Aislar, reconectar y verificar un elemento: el coordinador o el rol dueño de su red (TI u OT). */
+export function assertCanOperateAsset(user, asset) {
+  const allowed =
+    isCoordinator(user) ||
+    (user.rol === ROLES.IT_ANALYST && asset.red === 'TI') ||
+    (user.rol === ROLES.OT_OPERATOR && asset.red === 'OT');
+  if (!allowed) {
+    throw new ForbiddenError(`El rol ${user.rol} no puede operar elementos de la red ${asset.red}`);
+  }
+}
+
+/** Las rondas de verificación las inician los equipos técnicos o el coordinador. */
+export function assertCanStartRound(user) {
+  if (![ROLES.COORDINATOR, ROLES.IT_ANALYST, ROLES.OT_OPERATOR].includes(user.rol)) {
+    throw new ForbiddenError('Solo el coordinador, el analista TI o el operador OT pueden iniciar rondas de verificación');
+  }
+}
