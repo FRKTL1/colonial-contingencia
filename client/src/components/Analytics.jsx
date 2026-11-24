@@ -1,14 +1,15 @@
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { api, incidentsCsvUrl } from '../api.js';
+import { AXIS_STYLE, CHART_COLORS, TOOLTIP_PROPS } from '../chartTheme.js';
 import { EVIDENCE_CATEGORY, ROLE_LABELS, SECURITY_EVENT_LABELS, SEVERITY_LABELS, formatBytes, formatDate, formatHours } from '../constants.js';
 import { useAsync } from '../useAsync.js';
 import { ErrorBanner, Loading } from './common.jsx';
 
-// Paleta del sistema de diseño (Figma): mismos colores que los estados del panel.
-const C = { navy: '#1e3354', navySoft: '#2c4570', amber: '#f4c150', ok: '#2f8a57', bad: '#c93c3c', warn: '#b7791f', muted: '#637087', violet: '#7b61d1', grid: '#dde3ec' };
+// Paleta compartida con el tema oscuro (chartTheme.js).
+const C = CHART_COLORS;
 const SEVERITY_COLORS = { baja: C.muted, media: C.navySoft, alta: C.warn, critica: C.bad };
 const CATEGORY_COLORS = { imagen: C.navy, documento: C.ok, video: C.bad, audio: C.warn, registro: C.violet };
-const AXIS = { fontSize: 12, fill: C.muted };
+const AXIS = AXIS_STYLE;
 // Accesibilidad: sin animaciones si el sistema operativo pide reducir el movimiento.
 const ANIMATE = typeof window === 'undefined' || !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
@@ -36,7 +37,6 @@ function ChartCard({ title, subtitle, children, wide = false }) {
   );
 }
 
-const tooltipStyle = { borderRadius: 8, border: `1px solid ${C.grid}`, fontSize: 12 };
 
 export default function Analytics({ user }) {
   const { data, error, loading } = useAsync(() => api.analytics(), []);
@@ -87,7 +87,7 @@ export default function Analytics({ user }) {
               <CartesianGrid horizontal={false} stroke={C.grid} />
               <XAxis type="number" tick={AXIS} unit=" h" />
               <YAxis type="category" dataKey="nombre" tick={AXIS} width={150} />
-              <Tooltip contentStyle={tooltipStyle} formatter={(v) => [`${v} h`, 'Promedio']} />
+              <Tooltip {...TOOLTIP_PROPS} formatter={(v) => [`${v} h`, 'Promedio']} />
               <Bar isAnimationActive={ANIMATE} dataKey="horas_promedio" radius={[0, 4, 4, 0]}>
                 {stages.map((s) => <Cell key={s.etapa} fill={s.etapa === slowest?.etapa ? C.bad : C.navy} />)}
               </Bar>
@@ -101,7 +101,7 @@ export default function Analytics({ user }) {
               <CartesianGrid vertical={false} stroke={C.grid} />
               <XAxis dataKey="codigo" tick={{ ...AXIS, fontSize: 11 }} interval={0} angle={-30} textAnchor="end" height={55} />
               <YAxis tick={AXIS} unit=" h" />
-              <Tooltip contentStyle={tooltipStyle} formatter={(v) => [`${v} h`, 'Fuera de servicio']} labelFormatter={(l) => downtime.find((d) => d.codigo === l)?.nombre ?? l} />
+              <Tooltip {...TOOLTIP_PROPS} formatter={(v) => [`${v} h`, 'Fuera de servicio']} labelFormatter={(l) => downtime.find((d) => d.codigo === l)?.nombre ?? l} />
               <Bar isAnimationActive={ANIMATE} dataKey="horas" radius={[4, 4, 0, 0]}>
                 {downtime.map((d) => <Cell key={d.codigo} fill={d.tipo === 'OT' ? C.bad : C.navySoft} />)}
               </Bar>
@@ -116,7 +116,7 @@ export default function Analytics({ user }) {
               <CartesianGrid vertical={false} stroke={C.grid} />
               <XAxis dataKey="nombre" tick={AXIS} />
               <YAxis tick={AXIS} allowDecimals={false} />
-              <Tooltip contentStyle={tooltipStyle} formatter={(v) => [v, 'Incidentes']} />
+              <Tooltip {...TOOLTIP_PROPS} formatter={(v) => [v, 'Incidentes']} />
               <Bar isAnimationActive={ANIMATE} dataKey="cantidad" radius={[4, 4, 0, 0]} label={{ position: 'top', fontSize: 12, fill: C.navy }}>
                 {severity.map((s) => <Cell key={s.severidad} fill={SEVERITY_COLORS[s.severidad]} />)}
               </Bar>
@@ -130,7 +130,7 @@ export default function Analytics({ user }) {
               <CartesianGrid vertical={false} stroke={C.grid} />
               <XAxis dataKey="nombre" tick={AXIS} />
               <YAxis tick={AXIS} allowDecimals={false} />
-              <Tooltip contentStyle={tooltipStyle} labelFormatter={(l) => decisions.find((d) => d.codigo === l)?.pregunta ?? l} />
+              <Tooltip {...TOOLTIP_PROPS} labelFormatter={(l) => decisions.find((d) => d.codigo === l)?.pregunta ?? l} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Bar isAnimationActive={ANIMATE} dataKey="si" name="Sí" stackId="d" fill={C.ok} />
               <Bar isAnimationActive={ANIMATE} dataKey="no" name="No" stackId="d" fill={C.bad} radius={[4, 4, 0, 0]} />
@@ -144,7 +144,7 @@ export default function Analytics({ user }) {
               <CartesianGrid vertical={false} stroke={C.grid} />
               <XAxis dataKey="mes" tick={AXIS} />
               <YAxis tick={AXIS} allowDecimals={false} />
-              <Tooltip contentStyle={tooltipStyle} />
+              <Tooltip {...TOOLTIP_PROPS} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Bar isAnimationActive={ANIMATE} dataKey="reales" name="Reales" stackId="m" fill={C.navy} />
               <Bar isAnimationActive={ANIMATE} dataKey="simulacros" name="Simulacros" stackId="m" fill={C.violet} radius={[4, 4, 0, 0]} />
@@ -158,7 +158,7 @@ export default function Analytics({ user }) {
               <CartesianGrid vertical={false} stroke={C.grid} />
               <XAxis dataKey="nombre" tick={AXIS} />
               <YAxis tick={AXIS} allowDecimals={false} />
-              <Tooltip contentStyle={tooltipStyle} labelFormatter={(l) => { const o = owners.find((x) => x.nombre === l); return o ? `${o.nombre} · ${o.rolLabel}` : l; }} />
+              <Tooltip {...TOOLTIP_PROPS} labelFormatter={(l) => { const o = owners.find((x) => x.nombre === l); return o ? `${o.nombre} · ${o.rolLabel}` : l; }} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
               <Bar isAnimationActive={ANIMATE} dataKey="completadas" name="Completadas" stackId="a" fill={C.ok} />
               <Bar isAnimationActive={ANIMATE} dataKey="fallidas" name="Fallidas" stackId="a" fill={C.bad} />
@@ -174,7 +174,7 @@ export default function Analytics({ user }) {
                 <Pie data={evidence} dataKey="cantidad" nameKey="nombre" innerRadius={55} outerRadius={90} paddingAngle={2} isAnimationActive={ANIMATE} label={({ nombre, cantidad }) => `${nombre}: ${cantidad}`}>
                   {evidence.map((e) => <Cell key={e.categoria} fill={CATEGORY_COLORS[e.categoria]} />)}
                 </Pie>
-                <Tooltip contentStyle={tooltipStyle} formatter={(v, _n, p) => [`${v} archivos · ${formatBytes(p.payload.bytes)}`, p.payload.nombre]} />
+                <Tooltip {...TOOLTIP_PROPS} formatter={(v, _n, p) => [`${v} archivos · ${formatBytes(p.payload.bytes)}`, p.payload.nombre]} />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -187,7 +187,7 @@ export default function Analytics({ user }) {
                 <CartesianGrid horizontal={false} stroke={C.grid} />
                 <XAxis type="number" tick={AXIS} allowDecimals={false} />
                 <YAxis type="category" dataKey="nombre" tick={AXIS} width={140} />
-                <Tooltip contentStyle={tooltipStyle} formatter={(v) => [v, 'Eventos']} />
+                <Tooltip {...TOOLTIP_PROPS} formatter={(v) => [v, 'Eventos']} />
                 <Bar isAnimationActive={ANIMATE} dataKey="cantidad" radius={[0, 4, 4, 0]}>
                   {security.map((s) => <Cell key={s.evento} fill={/fallido|bloqueada|denegado/.test(s.evento) ? C.bad : C.navy} />)}
                 </Bar>

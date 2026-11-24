@@ -1,0 +1,260 @@
+/*
+ * Tema «Sala de control» para exposición.
+ * Se carga después de styles.css: redefine los tokens y corrige los colores claros fijos.
+ * Tipografía: serif de titulares (Fraunces), sans para lectura (Instrument Sans) y
+ * monoespaciada en mayúsculas para etiquetas técnicas (JetBrains Mono).
+ * Fondo: la red del oleoducto sobre una retícula de SCADA, con el brillo ámbar del combustible.
+ */
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/instrument-sans';
+@import '@fontsource-variable/jetbrains-mono';
+
+:root {
+  color-scheme: dark;
+
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Instrument Sans Variable', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, Menlo, monospace;
+
+  --ink: #061015;
+  --surface-solid: #0f1c22;
+  --surface-2: #15252c;
+  --surface: rgba(16, 29, 35, 0.88);
+  --border: rgba(150, 182, 194, 0.16);
+  --border-strong: rgba(150, 182, 194, 0.32);
+  --text: #e6edef;
+  --heading: #f5f0e6;
+  --muted: #93a7af;
+
+  /* --navy se usa como color de texto destacado en toda la app: en oscuro pasa a claro. */
+  --navy: #eaf2f4;
+  --navy-soft: #1c3640;
+  --teal: #45d3c2;
+  --amber: #f5b544;
+  --cta: #f59e2b;
+
+  --ok: #3fcf8e;
+  --ok-bg: rgba(63, 207, 142, 0.12);
+  --bad: #ff6b6b;
+  --bad-bg: rgba(255, 107, 107, 0.12);
+  --warn: #f2bd4b;
+  --warn-bg: rgba(242, 189, 75, 0.13);
+  --info-bg: rgba(69, 211, 194, 0.1);
+  --violet: #b9a3ff;
+  --violet-bg: rgba(167, 139, 250, 0.14);
+  --isolated: #e0628f;
+
+  --radius: 14px;
+  --shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 14px 32px rgba(0, 0, 0, 0.35);
+
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--ink);
+}
+
+body {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text);
+  background-color: var(--ink);
+  background-image:
+    radial-gradient(1100px 620px at 88% -8%, rgba(245, 158, 43, 0.16), transparent 62%),
+    radial-gradient(900px 640px at -12% 108%, rgba(69, 211, 194, 0.12), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M-40 760 C 220 720 330 610 560 600 S 900 520 1060 400 S 1380 170 1660 110' stroke='%23f5b544' stroke-opacity='.22' stroke-width='3'/%3E%3Cpath d='M-40 776 C 222 736 336 626 566 616 S 908 536 1068 416 S 1388 186 1660 126' stroke='%23f5b544' stroke-opacity='.12' stroke-width='2'/%3E%3Cpath d='M560 600 C 600 700 700 780 820 860' stroke='%2345d3c2' stroke-opacity='.16' stroke-width='2' stroke-dasharray='2 10'/%3E%3Cpath d='M1060 400 C 1150 470 1240 560 1400 610' stroke='%2345d3c2' stroke-opacity='.16' stroke-width='2' stroke-dasharray='2 10'/%3E%3Cpath d='M820 520 C 790 400 820 300 900 200' stroke='%2345d3c2' stroke-opacity='.12' stroke-width='2' stroke-dasharray='2 10'/%3E%3C/g%3E%3Cg fill='%23061015' stroke='%23f5b544' stroke-opacity='.45' stroke-width='2'%3E%3Ccircle cx='120' cy='738' r='6'/%3E%3Ccircle cx='560' cy='600' r='6'/%3E%3Ccircle cx='820' cy='520' r='5'/%3E%3Ccircle cx='1060' cy='400' r='7'/%3E%3Ccircle cx='1380' cy='190' r='6'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(rgba(150, 182, 194, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(150, 182, 194, 0.045) 1px, transparent 1px);
+  background-size: auto, auto, cover, 56px 56px, 56px 56px;
+  background-attachment: fixed;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+}
+
+/* ---------- tipografía */
+h1, h2 { font-family: var(--font-display); font-weight: 500; color: var(--heading); letter-spacing: -0.015em; font-optical-sizing: auto; }
+h1 { font-size: clamp(30px, 3.1vw, 44px); line-height: 1.08; }
+h2 { font-size: 26px; }
+h3 { font-size: 16.5px; font-weight: 650; color: var(--heading); letter-spacing: -0.005em; }
+h4 { color: var(--heading); }
+.page-head p.muted, .page-head > div > p { font-size: 15.5px; max-width: 760px; color: var(--muted); margin-top: 8px; }
+.muted { color: var(--muted); }
+code, .mono, .hash, .secret, .ledger__hash { font-family: var(--font-mono); }
+
+/* Etiquetas técnicas en monoespaciada (como "INTL · CASH" de la referencia). */
+.kpi__label, .service-card__code, .element-detail__code, .system-card__type, .table th,
+.plan-stage__meta dt, .viewer__meta dt, .sim-clock__label, .sim-event__title, .mapbar__field,
+.sim-tile b, .incident-mini__code, .stepper__label, .case-banner__tag {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 500;
+}
+.stepper__label { letter-spacing: 0.04em; font-size: 10.5px; color: var(--muted); }
+.stepper__step--current .stepper__label, .stepper__step--done .stepper__label { color: var(--text); }
+.kpi__value { font-family: var(--font-display); font-weight: 500; font-size: 36px; color: var(--heading); letter-spacing: -0.02em; }
+.kpis--5 .kpi__value { font-size: 30px; }
+
+/* Píldoras de estado en mayúsculas con contorno (como "CONFIRMED RESPONDING"). */
+.badge {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border: 1px solid currentColor;
+  background: rgba(6, 16, 21, 0.55) !important;
+}
+.badge::before { width: 5px; height: 5px; }
+.badge--action-pendiente, .badge--sev-baja { color: var(--muted); }
+.badge--sev-critica { color: #fff; background: var(--bad) !important; border-color: var(--bad); }
+.badge--simulacro, .badge--cat-registro { color: var(--violet); }
+.badge--decision { color: var(--amber); }
+
+/* ---------- barra superior */
+.topbar { background: rgba(6, 16, 21, 0.82); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+.brand strong { font-size: 13.5px; text-transform: uppercase; letter-spacing: 0.14em; font-weight: 700; color: var(--heading); }
+.brand small { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.brand__mark { background: linear-gradient(135deg, var(--amber), var(--cta)); box-shadow: 0 0 18px rgba(245, 158, 43, 0.45); }
+.nav__item { color: #b8c8ce; font-weight: 550; }
+.nav__item:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
+.nav__item--active { background: var(--heading); color: var(--ink); font-weight: 700; }
+.user-menu__button:hover { background: rgba(255, 255, 255, 0.06); }
+.user-menu__text small { color: var(--muted); }
+.avatar { color: var(--ink); }
+.btn--on-dark { border-color: var(--border-strong); }
+
+/* ---------- superficies */
+.panel, .kpi, .plan-stage, .insight, .evidence-card, .system-card, .round-card, .stepper, .chip-button {
+  background: linear-gradient(180deg, rgba(21, 37, 44, 0.92), rgba(13, 24, 29, 0.92));
+  border-color: var(--border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+}
+.panel, .kpi, .plan-stage, .stepper { border-radius: var(--radius); }
+.kpi { border-top-width: 3px; }
+.kpi--availability { border-top-color: var(--teal); }
+.meter, .round-card__bar { background: rgba(255, 255, 255, 0.08); }
+
+/* ---------- botones y enlaces */
+.btn { background: rgba(255, 255, 255, 0.04); color: var(--text); border-color: var(--border-strong); border-radius: 10px; }
+.btn:hover:not(:disabled) { border-color: var(--teal); }
+.btn--primary { background: var(--cta); border-color: var(--cta); color: var(--ink); }
+.btn--primary:hover:not(:disabled) { background: #ffb347; border-color: #ffb347; }
+.btn--warning { background: var(--amber); border-color: var(--amber); color: var(--ink); }
+.btn--yes { background: var(--ok); border-color: var(--ok); color: var(--ink); }
+.btn--no { background: var(--bad); border-color: var(--bad); color: var(--ink); }
+.btn--ghost { background: transparent; }
+.btn--danger { color: var(--bad); border-color: rgba(255, 107, 107, 0.4); }
+.link-button, .linklike, .source-card__head a, .source-links a { color: var(--teal); }
+.source-links a { background: var(--info-bg); }
+
+/* ---------- alertas */
+.alert--error { border-color: rgba(255, 107, 107, 0.4); }
+.alert--warning { border-color: rgba(242, 189, 75, 0.4); }
+.alert--success, .alert--ok { border-color: rgba(63, 207, 142, 0.4); }
+.alert--simulacro, .case-banner { background: var(--violet-bg); color: #ddd2ff; border: 1px solid rgba(185, 163, 255, 0.35); }
+.case-banner__tag { background: rgba(6, 16, 21, 0.6); color: var(--violet); }
+.toggle { background: var(--violet-bg); border-color: rgba(185, 163, 255, 0.4); }
+
+/* ---------- panel de servicios */
+.service-card { background: rgba(255, 255, 255, 0.025); border-color: var(--border); }
+.service-card--afectado { background: rgba(255, 107, 107, 0.07); }
+.service-card--en_recuperacion { background: rgba(242, 189, 75, 0.07); }
+.dot { background: rgba(255, 255, 255, 0.16); }
+.dot--on { background: var(--amber); }
+.incident-mini button { border-color: rgba(255, 107, 107, 0.35); color: var(--text); }
+
+/* ---------- tablas, segmentados y formularios */
+.table th { background: rgba(255, 255, 255, 0.03); color: var(--muted); }
+.table__row--link:hover { background: rgba(69, 211, 194, 0.06); }
+.segmented { background: rgba(255, 255, 255, 0.06); }
+.segmented__item--active { background: var(--heading); color: var(--ink); }
+.field input:not([type="checkbox"]), .field textarea, .field select, .new-action input, .new-action select, .action__close input,
+.account-form input, .account-card input, .uploader__fields input, .uploader__fields select, .mapbar__field select, .mapbar__field input,
+.check__note input, .dialog__body textarea, .service-card__action, .user-picker select {
+  background: rgba(6, 16, 21, 0.7);
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.field input:not([type="checkbox"]):focus, .field textarea:focus, .field select:focus { outline: 2px solid rgba(69, 211, 194, 0.55); border-color: var(--teal); }
+.checklist__item { border-color: var(--border); }
+.checklist__item input, .check__points input, .sim-toggle input, .sim-seek input { accent-color: var(--teal); }
+.checklist__item:has(input:checked) { border-color: var(--teal); }
+code { background: rgba(255, 255, 255, 0.07); }
+.chip { background: rgba(255, 255, 255, 0.07); }
+.chip--infraestructura { color: var(--ok); }
+.chip--servicio_externo { color: var(--warn); }
+.chip--documento { background: var(--violet-bg); color: var(--violet); }
+
+/* ---------- flujo y plan */
+.stepper__dot { background: rgba(255, 255, 255, 0.08); }
+.stepper__step--done .stepper__dot { color: var(--ink); }
+.stepper__step--current .stepper__dot { background: var(--amber); color: var(--ink); box-shadow: 0 0 0 4px rgba(245, 181, 68, 0.22), 0 0 18px rgba(245, 181, 68, 0.45); }
+.decision-chip { color: var(--ink); }
+.action--fallida { background: rgba(255, 107, 107, 0.07); border-color: rgba(255, 107, 107, 0.35); }
+.action--completada { background: rgba(63, 207, 142, 0.05); }
+.plan-stage__order { background: rgba(255, 255, 255, 0.1); color: var(--heading); font-family: var(--font-display); }
+.plan-stage--decision .plan-stage__order { background: var(--amber); color: var(--ink); }
+.plan-stage--retry .plan-stage__order { background: var(--bad); color: var(--ink); }
+
+/* ---------- acceso y cuenta */
+.login__hero { background: transparent; }
+.login__hero h1 { font-size: clamp(38px, 4.4vw, 60px); color: var(--heading); }
+.login__hero p, .login__facts { color: #b8c8ce; }
+.login__panel { background: rgba(6, 16, 21, 0.55); backdrop-filter: blur(8px); border-left: 1px solid var(--border); }
+.login__form h2 { font-size: 30px; }
+.account-card--required { box-shadow: 0 0 0 3px rgba(245, 181, 68, 0.25); }
+.dialog { background: var(--surface-solid); color: var(--text); border: 1px solid var(--border-strong); }
+.dialog::backdrop { background: rgba(3, 8, 11, 0.7); }
+
+/* ---------- evidencias */
+.dropzone { background: rgba(255, 255, 255, 0.03); border-color: var(--border-strong); }
+.evidence-card__preview { background: rgba(255, 255, 255, 0.05); }
+.evidence-card__thumb--registro { background: var(--violet-bg); }
+.cat-chip { background: rgba(255, 255, 255, 0.04); border-color: var(--border-strong); color: var(--text); }
+.cat-chip span { background: rgba(255, 255, 255, 0.08); }
+.cat-chip--active { background: var(--heading); border-color: var(--heading); color: var(--ink); }
+.cat-chip--active span { background: rgba(6, 16, 21, 0.15); color: var(--ink); }
+
+/* ---------- mapa del oleoducto */
+.netmap__canvas > svg { background: radial-gradient(120% 90% at 70% 20%, #10242b, #091419); }
+.netmap__sea { fill: #4f6a75; }
+.netmap__node { fill: var(--ink); stroke: var(--heading); }
+.netmap__node--patio_tanques, .netmap__node--terminal, .netmap__node--origen { fill: var(--heading); }
+.netmap__label { fill: var(--text); stroke: #091419; }
+.netmap__label--major { fill: var(--heading); }
+.element-detail__finding { background: rgba(255, 107, 107, 0.08); }
+.isolation { border-color: var(--border); }
+.isolation--on { background: rgba(224, 98, 143, 0.1); border-color: rgba(224, 98, 143, 0.45); }
+.system-card.is-selected { outline-color: var(--teal); }
+.round-card.is-selected, .round-card:hover { border-color: var(--teal); }
+
+/* ---------- simulación */
+.sim-clock { background: rgba(6, 16, 21, 0.75); border: 1px solid rgba(245, 181, 68, 0.4); box-shadow: 0 0 24px rgba(245, 158, 43, 0.15); }
+.sim-clock__time { font-family: var(--font-display); font-weight: 500; font-size: 24px; color: var(--heading); }
+.sim-clock__elapsed { font-family: var(--font-mono); }
+.sim-now { border-top-color: var(--teal); }
+.sim-now__head h3, .sim-decision__head h3 { font-family: var(--font-display); font-weight: 500; font-size: 26px; }
+.sim-event { background: rgba(255, 255, 255, 0.03); }
+.sim-event__icon { background: var(--surface-2); color: var(--heading); border: 1px solid var(--border-strong); }
+.sim-event--decision .sim-event__icon { color: var(--ink); }
+.sim-event--accion_completada .sim-event__icon, .sim-event--fin .sim-event__icon { color: var(--ink); }
+.sim-branch { background: rgba(255, 255, 255, 0.025); }
+.sim-branch__head strong { font-family: var(--font-display); font-weight: 500; font-size: 22px; }
+.sim-chips li { background: var(--info-bg); color: var(--teal); }
+.sim-tile { background: rgba(63, 207, 142, 0.08); border-color: var(--border); }
+.sim-tile b { color: var(--heading); }
+.sim-tile--afectado { background: rgba(255, 107, 107, 0.1); }
+.sim-tile--en_recuperacion { background: rgba(242, 189, 75, 0.1); }
+.sim-role--coordinador { background: var(--heading); color: var(--ink); }
+.sim-role--analista_ti { background: rgba(69, 211, 194, 0.18); color: var(--teal); }
+.sim-role--operador_ot { background: var(--ok-bg); color: var(--ok); }
+.sim-role--legal { background: var(--violet-bg); color: var(--violet); }
+.sim-role--comunicaciones { background: var(--warn-bg); color: var(--warn); }
+
+/* ---------- línea de tiempo */
+.timeline li::before { background: var(--heading); box-shadow: 0 0 0 3px var(--surface-solid); }
+
+/* Recharts: la leyenda y los ejes heredan la tipografía de la app. */
+.recharts-wrapper, .recharts-legend-item-text { font-family: var(--font-sans); }
+.recharts-cartesian-axis-tick text { font-family: var(--font-mono); font-size: 11px; }
