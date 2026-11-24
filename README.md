@@ -15,7 +15,7 @@ proyecto [Rack · Operación](https://github.com/Aldoyzx/rack-operacion)). Está
 | Base de datos | PostgreSQL 16 (driver `pg`) |
 | Seguridad | scrypt, sesión firmada HS256 en cookie httpOnly, TOTP (RFC 6238), AES-256-GCM |
 | Nube | Render (Blueprint `render.yaml`) · guía en [DESPLIEGUE.md](DESPLIEGUE.md) |
-| Calidad | 73 pruebas automatizadas (`node:test`) · GitHub Actions |
+| Calidad | 83 pruebas automatizadas (`node:test`) · GitHub Actions |
 
 
 > **Entregables de la actividad** (ficha, diagrama, presentación, guion, Figma): ver [`entrega/`](entrega/README.md).
@@ -26,6 +26,7 @@ proyecto [Rack · Operación](https://github.com/Aldoyzx/rack-operacion)). Está
 |---|---|
 | Acceso | Contraseña + código MFA, bloqueo tras 5 intentos, límite por IP |
 | Panel | Estado de los 10 servicios TI/OT, incidentes abiertos y eventos (se actualiza cada 10 s) |
+| Simulación | Botón «Iniciar simulación» en el Panel: recorre en pantalla el caso de Colonial (7–13 may 2021) desde la afectación hasta el cierre, con reloj simulado, etapa y responsable, acciones por persona, servicios y gráficas en vivo. Se puede detener en cada decisión D1–D4 para elegir otra ruta. Corre en el navegador con las reglas de `GET /api/flujo` y no modifica datos |
 | Mapa de calor | Red de Colonial de Houston a Linden: 22 instalaciones del mapa oficial en sus coordenadas, líneas 1–4 y ramales. Escala de calor de Rack alimentada con la capacidad nominal publicada de cada tramo detenido; capas de impacto, estado y verificación; reproducción día a día del 7 al 13 de mayo de 2021 |
 | Aislamiento | Al caer un servicio, sus tramos (bombeo detenido, válvulas cerradas) y sistemas se aíslan solos, como el paro del 7 de mayo; aislamiento manual por rol; no se reinicia sin una verificación OK posterior |
 | Rondas | Lista de verificación con fuente por tipo (tramo, sistema TI, sistema OT); un OK exige confirmar todos los puntos; cierre solo con todo verificado |
@@ -60,7 +61,7 @@ Cuentas de demostración (contraseña `Colonial2021!`; cámbienla en "Mi cuenta"
 
 | Comando (en `server/`) | Qué hace |
 |---|---|
-| `npm test` | 73 pruebas contra la base `contingencia_test` |
+| `npm test` | 83 pruebas contra la base `contingencia_test` |
 | `npm run db:demo` | Recrea la base con datos iniciales e incidentes históricos (2021–2026) |
 | `npm run db:reset` | Recrea la base solo con los datos iniciales |
 | `npm run simulacro` | Ejecuta un simulacro completo y escribe el informe en `docs/evidencias/` |

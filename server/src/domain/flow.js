@@ -184,9 +184,23 @@ export function getBranch(decisionCode, answer) {
   return answer ? decision.si : decision.no;
 }
 
-/** Definición serializable para que el cliente dibuje el flujo sin duplicar reglas. */
+const describeAction = (accion) => (accion ? { descripcion: accion.descripcion, rol: accion.rol } : null);
+
+const describeBranch = (branch) => ({
+  destino: branch.destino,
+  accion: branch.accion?.descripcion ?? null,
+  rol: branch.accion?.rol ?? null,
+  efecto: branch.efecto ?? null,
+  cuentaComoIntentoFallido: Boolean(branch.cuentaComoIntentoFallido),
+});
+
+/**
+ * Definición serializable para que el cliente dibuje (y simule) el flujo sin duplicar
+ * reglas: rutas, responsables por rol y efectos sobre los servicios.
+ */
 export function describeFlow() {
   return {
+    etapaInicial: INITIAL_STAGE,
     etapas: Object.entries(STAGES).map(([clave, etapa]) => ({
       clave,
       nombre: etapa.nombre,
@@ -194,13 +208,17 @@ export function describeFlow() {
       tipo: etapa.tipo,
       decision: etapa.decision ?? null,
       esReintento: Boolean(etapa.esReintento),
+      rolResponsable: etapa.rolResponsable ?? null,
+      siguiente: etapa.siguiente ?? null,
+      accionAlEntrar: describeAction(etapa.accionAlEntrar),
+      efectoAlEntrar: etapa.efectoAlEntrar ?? null,
     })),
     decisiones: Object.entries(DECISIONS).map(([codigo, d]) => ({
       codigo,
       etapa: d.etapa,
       pregunta: d.pregunta,
-      si: { destino: d.si.destino, accion: d.si.accion?.descripcion ?? null },
-      no: { destino: d.no.destino, accion: d.no.accion?.descripcion ?? null },
+      si: describeBranch(d.si),
+      no: describeBranch(d.no),
     })),
     maxIntentosErradicacion: MAX_ERADICATION_ATTEMPTS,
   };
