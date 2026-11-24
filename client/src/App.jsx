@@ -14,9 +14,11 @@ import PlanView from './components/PlanView.jsx';
 
 // Los gráficos (Recharts) se descargan solo al abrir Analítica: el acceso inicial es más liviano.
 const Analytics = lazy(() => import('./components/Analytics.jsx'));
+const Simulation = lazy(() => import('./components/simulation/Simulation.jsx'));
 
 const NAV = [
   { key: 'panel', label: 'Panel' },
+  { key: 'simulacion', label: 'Simulación' },
   { key: 'mapa', label: 'Mapa de calor' },
   { key: 'incidentes', label: 'Incidentes' },
   { key: 'nuevo', label: 'Registrar' },
@@ -142,12 +144,13 @@ export default function App() {
         {effectiveView.name === 'cuenta' && <Account session={session} onSessionChange={setSession} />}
         {canOperate && (
           <>
-            {effectiveView.name === 'panel' && <Dashboard user={currentUser} onOpenIncident={openIncident} />}
+            {effectiveView.name === 'panel' && <Dashboard user={currentUser} onOpenIncident={openIncident} onSimulate={() => setView({ name: 'simulacion' })} />}
             {effectiveView.name === 'incidentes' && <IncidentList onOpen={openIncident} />}
             {effectiveView.name === 'nuevo' && users.length > 0 && <IncidentForm users={users} currentUser={currentUser} onCreated={openIncident} />}
             {effectiveView.name === 'mapa' && <HeatMaps user={currentUser} onOpenIncident={openIncident} />}
             {effectiveView.name === 'plan' && <PlanView />}
             {effectiveView.name === 'evidencias' && <EvidenceLibrary user={currentUser} onOpenIncident={openIncident} />}
+            {effectiveView.name === 'simulacion' && <Suspense fallback={<Loading label="Cargando simulación…" />}><Simulation /></Suspense>}
             {effectiveView.name === 'analitica' && <Suspense fallback={<Loading label="Cargando gráficos…" />}><Analytics user={currentUser} /></Suspense>}
             {effectiveView.name === 'detalle' && (
               <IncidentDetail id={effectiveView.id} users={users} user={currentUser} onBack={() => setView({ name: 'incidentes' })} />

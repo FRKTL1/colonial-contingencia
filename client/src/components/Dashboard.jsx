@@ -95,7 +95,7 @@ function ServiceGroup({ title, subtitle, services, ...cardProps }) {
   );
 }
 
-export default function Dashboard({ user, onOpenIncident }) {
+export default function Dashboard({ user, onOpenIncident, onSimulate }) {
   const { data, error, loading, reload } = useAsync(() => api.dashboard(), [], { pollMs: POLL_MS });
   const [actionError, setActionError] = useState(null);
 
@@ -111,7 +111,14 @@ export default function Dashboard({ user, onOpenIncident }) {
           <h1>Estado de servicios</h1>
           <p className="muted">Actualización automática cada {POLL_MS / 1000} s · Última: {formatDate(data.generadoEn)}</p>
         </div>
-        <button type="button" className="btn btn--ghost" onClick={reload}>Actualizar</button>
+        <div className="page-head__actions">
+          {onSimulate && (
+            <button type="button" className="btn btn--warning" onClick={onSimulate} title="Recorre el plan completo en pantalla sin modificar datos">
+              ▶ Iniciar simulación
+            </button>
+          )}
+          <button type="button" className="btn btn--ghost" onClick={reload}>Actualizar</button>
+        </div>
       </div>
 
       <ErrorBanner error={error ?? actionError} onDismiss={() => setActionError(null)} />
