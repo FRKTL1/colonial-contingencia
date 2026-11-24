@@ -1,9 +1,9 @@
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { AXIS_STYLE, CHART_COLORS, TOOLTIP_PROPS } from '../../chartTheme.js';
 import { SIMULATION_START, formatSimulatedTime } from '../../simulation/engine.js';
 
-const C = { navy: '#1e3354', ok: '#2f8a57', bad: '#c93c3c', amber: '#f4c150', warn: '#b7791f', muted: '#637087', grid: '#dde3ec', violet: '#7b61d1' };
-const AXIS = { fontSize: 12, fill: C.muted };
-const tooltipStyle = { borderRadius: 8, border: `1px solid ${C.grid}`, fontSize: 12 };
+const C = CHART_COLORS;
+const AXIS = AXIS_STYLE;
 const ANIMATE = typeof window === 'undefined' || !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 /** Marcas del eje en cada medianoche simulada, para leer el eje por días como en el caso real. */
@@ -45,7 +45,7 @@ export default function SimCharts({ series, totalHours, owners, stages }) {
             <CartesianGrid stroke={C.grid} vertical={false} />
             {xAxis}
             <YAxis allowDecimals={false} domain={[0, 10]} tick={AXIS} />
-            <Tooltip contentStyle={tooltipStyle} labelFormatter={timeLabel} />
+            <Tooltip {...TOOLTIP_PROPS} labelFormatter={timeLabel} />
             <Legend wrapperStyle={{ fontSize: 12 }} />
             <Area type="stepAfter" dataKey="afectado" name="Afectados" stackId="s" stroke={C.bad} fill={C.bad} fillOpacity={0.75} isAnimationActive={false} />
             <Area type="stepAfter" dataKey="en_recuperacion" name="En recuperación" stackId="s" stroke={C.warn} fill={C.amber} fillOpacity={0.85} isAnimationActive={false} />
@@ -60,7 +60,7 @@ export default function SimCharts({ series, totalHours, owners, stages }) {
             <CartesianGrid stroke={C.grid} vertical={false} />
             {xAxis}
             <YAxis domain={[0, 100]} tickFormatter={(v) => `${v}%`} tick={AXIS} />
-            <Tooltip contentStyle={tooltipStyle} labelFormatter={timeLabel} formatter={(v) => `${v}%`} />
+            <Tooltip {...TOOLTIP_PROPS} labelFormatter={timeLabel} formatter={(v) => `${v}%`} />
             <Legend wrapperStyle={{ fontSize: 12 }} />
             <Line type="stepAfter" dataKey="disponibilidad" name="Disponibilidad" stroke={C.navy} strokeWidth={2} dot={false} isAnimationActive={false} />
             <Line type="stepAfter" dataKey="flujoOleoducto" name="Flujo del oleoducto" stroke={C.bad} strokeWidth={2} strokeDasharray="5 3" dot={false} isAnimationActive={false} />
@@ -74,7 +74,7 @@ export default function SimCharts({ series, totalHours, owners, stages }) {
             <CartesianGrid stroke={C.grid} vertical={false} />
             <XAxis dataKey="corto" tick={AXIS} />
             <YAxis allowDecimals={false} tick={AXIS} />
-            <Tooltip contentStyle={tooltipStyle} labelFormatter={(_, p) => p?.[0]?.payload?.nombre ?? ''} />
+            <Tooltip {...TOOLTIP_PROPS} labelFormatter={(_, p) => p?.[0]?.payload?.nombre ?? ''} />
             <Legend wrapperStyle={{ fontSize: 12 }} />
             <Bar dataKey="asignadas" name="Asignadas" fill={C.navy} radius={[4, 4, 0, 0]} isAnimationActive={ANIMATE} />
             <Bar dataKey="completadas" name="Completadas" fill={C.ok} radius={[4, 4, 0, 0]} isAnimationActive={ANIMATE} />
@@ -89,7 +89,7 @@ export default function SimCharts({ series, totalHours, owners, stages }) {
             <CartesianGrid stroke={C.grid} horizontal={false} />
             <XAxis type="number" tick={AXIS} tickFormatter={(v) => `${v} h`} />
             <YAxis type="category" dataKey="nombre" tick={AXIS} width={130} interval={0} />
-            <Tooltip contentStyle={tooltipStyle} formatter={(v) => `${v} h`} />
+            <Tooltip {...TOOLTIP_PROPS} formatter={(v) => `${v} h`} />
             <Bar dataKey="horas" name="Horas" fill={C.violet} radius={[0, 4, 4, 0]} isAnimationActive={ANIMATE} />
           </BarChart>
         </ResponsiveContainer>
